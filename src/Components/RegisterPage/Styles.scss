@@ -1,0 +1,21 @@
+@media only screen and (max-width: 480px) {
+    .card-container__image {
+        display: none;
+    }
+}
+.card-container {
+    display: grid;
+    margin-top: 5%;
+    grid-template-columns: 0.7fr 1fr; 
+    grid-template-rows: 1fr;
+    -webkit-box-shadow: 2px -1px 20px -3px rgba(66, 68, 90, 1);
+    -moz-box-shadow: 2px -1px 20px -3px rgba(66, 68, 90, 1);
+    box-shadow: 2px -1px 20px -3px rgba(66, 68, 90, 1);
+    border-radius: 10px;
+}
+.card-container__image {
+    grid-column: 1/2;
+}
+.card-container__form {
+    grid-column: 2/3;
+}

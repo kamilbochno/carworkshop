@@ -1,0 +1,20 @@
+$primary-color: white;
+$left-height: 100%;
+$left-menu-width: 250px;
+$menu-border: #c4c3c2 solid 1px;
+
+.left-menu {
+    height: $left-height;
+    background: $primary-color;
+    left: 0;
+    position: absolute;
+    width: $left-menu-width;
+    border-right: $menu-border;
+}
+
+
+
+.Logo {
+    left: 20px;
+    top: 20px;
+}
