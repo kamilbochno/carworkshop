@@ -8,9 +8,10 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const User = require("./Models/userModel");
 const { response } = require('express');
-const client = new MongoClient (process.env.URL);
+const client = new MongoClient(process.env.URL);
 const Users = client.db('WorkShopDB').collection('Users');
 const Cars = client.db('WorkShopDB').collection('Cars');
+const SelectCars = client.db('WorkShopDB').collection('SelectCars')
 app.use(bodyParser.json());
 
 app.post("/addUser", async (req, res) => {
@@ -92,6 +93,18 @@ app.post("/dashboard/cars", async (req, res) => {
         })
     }
 })
+
+app.get("/dashboard/cars/addcar/getCars", async (req, res) => {
+
+        SelectCars.find().toArray(function (err, car) {
+            if (err) return res.status(500).send("d");
+    
+            if (car) {
+                return res.status(200).send(car);
+            }
+        })
+    }
+)
 const PORT = process.env.API_PORT;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
