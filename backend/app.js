@@ -105,6 +105,38 @@ app.get("/dashboard/cars/addcar/getCars", async (req, res) => {
         })
     }
 )
+
+app.post("/dashboard/cars/addcar", async (req, res) => {
+    const { carBrand, carModel, engine, hp, mileage, vin, year, token } = req.body;
+    if (token != null) {
+        const decoded = jwt.decode(token);
+        let userId = decoded.userId
+        Cars.findOne({UserId: userId, CarBrand: carBrand, CarModel: carModel, Engine: engine, Hp: hp, Mileage: mileage, VinNumber: vin, Year: year}, (err, car) =>  {
+            console.log(carBrand)
+            if (err) return res.status(500).send("Error");
+    
+            if (car) {
+                return res.status(400).send("Car already exists");
+            }
+            if (!car) {
+                Cars.insertOne(
+                    {
+                        UserId: userId,
+                        CarBrand: carBrand,
+                        CarModel: carModel,
+                        Engine: engine,
+                        Hp: hp,
+                        Mileage: mileage,
+                        VinNumber: vin,
+                        Year: year,
+                    }
+                )
+                return res.status(201).send("Car added successfully");
+            }
+        }
+        )
+        }
+})
 const PORT = process.env.API_PORT;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
