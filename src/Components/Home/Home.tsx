@@ -138,7 +138,17 @@ function App() {
       img: team1
     }
   ];
-
+  const toTop = document.getElementById("toTop");
+  window.onscroll = function () {
+    if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+      toTop.classList.remove("hidden");
+    } else {
+      toTop.classList.add("hidden");
+    }
+  };
+  function goToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
   return (
     <div>
       <Navbar />
@@ -491,6 +501,12 @@ function App() {
             </div>
           </div>
         </div>
+        <button
+          id="toTop"
+          onClick={goToTop}
+          className="hidden fixed z-90 bottom-8 right-8 border-0 w-12 h-12 rounded-full drop-shadow-md bg-indigo-500 text-white text-3xl font-bold hover:bg-indigo-700">
+          <ArrowUpIcon className="ml-2 h-8 w-8" />
+        </button>
       </main>
       <Footer />
     </div>
