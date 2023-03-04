@@ -138,7 +138,8 @@ function App() {
       img: team1
     }
   ];
-  const toTop = document.getElementById("toTop");
+  const toTop = document.getElementById("toTopButton");
+
   window.onscroll = function () {
     if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
       toTop.classList.remove("hidden");
@@ -190,7 +191,7 @@ function App() {
             </div>
           </div>
         </div>
-        <div className="bg-white py-24 sm:py-32">
+        <div id="about" className="bg-white py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-2xl lg:text-center">
               <h2 className="text-base font-semibold leading-7 text-indigo-600">
@@ -237,7 +238,7 @@ function App() {
             </div>
           </div>
         </div>
-        <div className="bg-white py-24 sm:py-32">
+        <div id="stats" className="bg-white py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <dl className="grid grid-cols-1 gap-y-16 gap-x-8 text-center lg:grid-cols-3">
               {stats.map((stat) => (
@@ -251,7 +252,7 @@ function App() {
             </dl>
           </div>
         </div>
-        <div className="bg-gray-200 py-24 sm:py-32">
+        <div id="team" className="bg-gray-200 py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-2xl lg:text-center">
               <h2 className="text-base font-semibold leading-7 text-indigo-600">
@@ -290,7 +291,7 @@ function App() {
             </div>
           </div>
         </div>
-        <div className="bg-white py-24 sm:py-32">
+        <div id="reviews" className="bg-white py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-2xl lg:text-center">
               <h2 className="text-base font-semibold leading-7 text-indigo-600">Reviews</h2>
@@ -502,7 +503,7 @@ function App() {
           </div>
         </div>
         <button
-          id="toTop"
+          id="toTopButton"
           onClick={goToTop}
           className="hidden fixed z-90 bottom-8 right-8 border-0 w-12 h-12 rounded-full drop-shadow-md bg-indigo-500 text-white text-3xl font-bold hover:bg-indigo-700">
           <ArrowUpIcon className="ml-2 h-8 w-8" />
