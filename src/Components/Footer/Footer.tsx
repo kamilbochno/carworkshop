@@ -6,19 +6,19 @@ const Footer = () => {
   return (
     <footer className="w-full p-4 bg-gray-800 sm:p-6">
       <div className="md:flex md:justify-between">
-        <div className="hover:scale-125 duration-200 flex mx-auto mb-6 md:mb-0">
+        <div className="lg:hover:scale-125 duration-200 flex mx-auto mb-6 md:mb-0  sm:ml-6 md:mx-auto">
           <a href="/" className="flex items-center">
             <img
               src={logo}
               className="bg-blue-200 rounded-full h-8 mr-3"
               alt="AutoFix Solutions Logo"
             />
-            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+            <span className="self-center text-2xl font-semibold sm:text-xl whitespace-nowrap text-white">
               AutoFix Solutions
             </span>
           </a>
         </div>
-        <div className="flex mx-auto grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
+        <div className="flex mx-auto grid grid-cols-3 gap-8 sm:gap-0 sm:grid-cols-3 sm:ml-8">
           <div>
             <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
               Resources
