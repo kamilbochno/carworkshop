@@ -13,7 +13,7 @@ const Footer = () => {
               className="bg-blue-200 rounded-full h-8 mr-3"
               alt="AutoFix Solutions Logo"
             />
-            <span className="self-center text-2xl font-semibold sm:text-xl whitespace-nowrap text-white">
+            <span className="self-center uppercase text-2xl font-semibold sm:text-xl whitespace-nowrap text-white">
               AutoFix Solutions
             </span>
           </a>

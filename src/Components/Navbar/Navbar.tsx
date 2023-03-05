@@ -33,7 +33,7 @@ const Navbar = () => {
   }
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
-    <section className="navigation">
+    <section className="navigation bg-gray-300">
       <div className="nav-container">
         <div className="brand">
           <div className="sm mt-8 flex mx-auto">

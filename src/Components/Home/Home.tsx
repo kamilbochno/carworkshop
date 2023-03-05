@@ -154,22 +154,22 @@ function App() {
     <div>
       <Navbar />
       <main>
-        <div id="top" className="relative">
+        <div id="top">
           <div
             className="flex items-center
-        justify-center h-screen overflow-hidden">
+        justify-center overflow-hidden relative">
             <video
-              className="absolute brightness-50 top-0 left-0 z-0 pointer-events-none overflow-hidden"
+              className="aspect-auto brightness-50 top-0 left-0 z-0 pointer-events-none overflow-hidden"
               muted
               autoPlay
               loop>
               <source src={bgVideo} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
-            <div className="mx-auto absolute max-w-2xl py-32 sm:py-48 lg:py-56">
-              <div className="hidden sm:mb-8 sm:flex sm:justify-center">
+            <div className="absolute mx-auto max-w-lg py-16">
+              <div className="mb-8 justify-center">
                 <div className="text-center">
-                  <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+                  <h1 className="text-4xl font-bold tracking-tight text-white sm:text-4xl">
                     Best Car Repairing Services & More
                   </h1>
                   <p className="mt-6 text-lg leading-8 text-gray-300">
@@ -193,7 +193,7 @@ function App() {
         </div>
         <div id="about" className="bg-white py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl lg:text-center">
+            <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-base font-semibold leading-7 text-indigo-600">
                 About Our Company
               </h2>
@@ -209,7 +209,7 @@ function App() {
         </div>
         <div id="services" className="bg-gray-200 py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl lg:text-center">
+            <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-base font-semibold leading-7 text-indigo-600">What We Do</h2>
               <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
                 Our Services
@@ -219,12 +219,12 @@ function App() {
                 egestas a elementum pulvinar et feugiat blandit at. In mi viverra elit nunc.
               </p>
             </div>
-            <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-              <dl className="grid max-w-xl grid-cols-1 gap-y-10 gap-x-8 lg:max-w-none lg:grid-cols-3 lg:gap-y-16">
+            <div className="text-center mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
+              <dl className="grid mx-auto max-w-xl grid-cols-1 gap-y-10 md:grid-cols-2 lg:max-w-none lg:grid-cols-3 lg:gap-y-16">
                 {services.map((service) => (
-                  <div key={service.name} className="relative pl-16">
+                  <div key={service.name} className="relative">
                     <dt className="text-base font-semibold leading-7 text-gray-900">
-                      <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
+                      <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
                         <service.icon className="h-6 w-6 text-white" aria-hidden="true" />
                       </div>
                       {service.name}
@@ -254,7 +254,7 @@ function App() {
         </div>
         <div id="team" className="bg-gray-200 py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl lg:text-center">
+            <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-base font-semibold leading-7 text-indigo-600">
                 Meet Our Expertise
               </h2>
@@ -266,10 +266,10 @@ function App() {
                 egestas a elementum pulvinar et feugiat blandit at. In mi viverra elit nunc.
               </p>
             </div>
-            <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-              <ul className="grid grid-cols-1 gap-y-16 gap-x-8 text-center lg:grid-cols-3">
+            <div className="mx-auto mt-16 max-w-4xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
+              <ul className="grid grid-cols-1 justify-center gap-y-16 text-center md:grid-cols-2 lg:grid-cols-3">
                 {people.map((person) => (
-                  <li key={person.name}>
+                  <li key={person.name} className="mx-auto">
                     <div className="flex items-center gap-x-6">
                       <img
                         className="h-16 w-16 rounded-full border border-black"
@@ -293,7 +293,7 @@ function App() {
         </div>
         <div id="reviews" className="bg-white py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl lg:text-center">
+            <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-base font-semibold leading-7 text-indigo-600">Reviews</h2>
               <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
                 What our clients say
@@ -326,7 +326,7 @@ function App() {
         </div>
         <div id="contact" className="bg-gray-200 py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl lg:text-center">
+            <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-base font-semibold leading-7 text-indigo-600">Get in touch</h2>
               <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
                 Contact Us
@@ -483,8 +483,8 @@ function App() {
                 </button>
               </div>
             </form>
-            <div className="mx-auto mt-8 max-w-2xl sm:mt-8 lg:mt-16 lg:max-w-4xl">
-              <dl className="grid max-w-xl grid-cols-1 gap-y-12 gap-x-4 lg:max-w-none lg:grid-cols-3 lg:gap-y-12">
+            <div className="mx-auto mt-8 max-w-2xl sm:mt-12 lg:mt-16 lg:max-w-4xl">
+              <dl className="grid max-w-xl grid-cols-1 mx-auto gap-y-12 gap-x-4 lg:max-w-none lg:grid-cols-3 lg:gap-y-12">
                 {contact.map((contact) => (
                   <div key={contact.name} className="relative">
                     <div className="flex mx-auto h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">
