@@ -1,9 +1,10 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-
-function AddCar({ openAddCar, setIsOpenAddCar }) {
+import UserCarsContext from "../../../context/UserCarsProvider.tsx";
+function AddCar() {
+  const { isOpenAddCar, setIsOpenAddCar, getCars } = useContext<any>(UserCarsContext);
   const [carsData, setCarsData] = useState<any>([]);
   const [carModels, setCarModels] = useState<any>([]);
 
@@ -62,7 +63,7 @@ function AddCar({ openAddCar, setIsOpenAddCar }) {
         const car = await axios.post("/dashboard/cars/addcar", carData).then((res) => {
           if (res.status === 201) {
             setIsOpenAddCar(false);
-
+            getCars();
             console.log(res.data);
           }
         });
@@ -74,7 +75,7 @@ function AddCar({ openAddCar, setIsOpenAddCar }) {
     }
     console.log(carData);
   };
-  if (!openAddCar) return null;
+  if (!isOpenAddCar) return null;
 
   return (
     <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -103,65 +104,73 @@ function AddCar({ openAddCar, setIsOpenAddCar }) {
           </div>
           <div className="relative p-4 flex-auto">
             <form className="px-8 w-full" onSubmit={handleSubmitCar}>
-              <label className="block text-sm font-medium text-black">Select your car brand</label>
-              <select
-                id="carBrand"
-                name="carBrand"
-                onChange={handleChangeBrand}
-                className="border mb-2 border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option value={""} selected disabled>
-                  Select...
-                </option>
-                {carsData.map((cars) => (
-                  <option key={cars._id} value={cars.brand}>
-                    {cars.brand}
+              <div className="grid grid-cols-2">
+                <label className="block text-sm font-medium text-black mt-3">
+                  Select your car brand
+                </label>
+                <select
+                  id="carBrand"
+                  name="carBrand"
+                  onChange={handleChangeBrand}
+                  className="border mb-2 border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  <option value={""} selected disabled>
+                    Select...
                   </option>
-                ))}
-              </select>
-              <label className="block text-sm font-medium text-black">Select your car model</label>
-              <select
-                id="carModel"
-                name="carModel"
-                onChange={handleChangeModel}
-                className="border mb-2 border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option selected disabled>
-                  Select...
-                </option>
-                {carModels.map((models) => (
-                  <option value={models}>{models}</option>
-                ))}
-              </select>
-              <label className="block text-sm font-medium text-black">Engine</label>
-              <input
-                name="engine"
-                className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
-              />
-              <label className="block text-sm font-medium text-black">Hp</label>
-              <input
-                name="hp"
-                className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
-              />
-              <label className="block text-sm font-medium text-black">Year of production</label>
-              <input
-                name="year"
-                className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
-              />
-              <label className="block text-sm font-medium text-black">Car mileage</label>
-              <input
-                name="mileage"
-                className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
-              />
-              <label className="block text-sm font-medium text-black">VIN number</label>
-              <input
-                name="vin"
-                className="shadow appearance-none border rounded w-full py-2 px-1 text-black"
-              />
-              <div className="flex justify-center items-center mt-4">
-                <button
-                  className="text-white bg-blue-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg hover:bg-blue-600 outline-none focus:outline-none mr-1 mb-1"
-                  type="submit">
-                  Submit
-                </button>
+                  {carsData.map((cars) => (
+                    <option key={cars._id} value={cars.brand}>
+                      {cars.brand}
+                    </option>
+                  ))}
+                </select>
+                <label className="block text-sm font-medium text-black mt-3">
+                  Select your car model
+                </label>
+                <select
+                  id="carModel"
+                  name="carModel"
+                  onChange={handleChangeModel}
+                  className="border mb-2 border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  <option selected disabled>
+                    Select...
+                  </option>
+                  {carModels.map((models) => (
+                    <option value={models}>{models}</option>
+                  ))}
+                </select>
+                <label className="block text-sm font-medium text-black mt-3">Engine</label>
+                <input
+                  name="engine"
+                  className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                />
+                <label className="block text-sm font-medium text-black mt-3">Hp</label>
+                <input
+                  name="hp"
+                  className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                />
+                <label className="block text-sm font-medium text-black mt-3">
+                  Year of production
+                </label>
+                <input
+                  name="year"
+                  className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                />
+                <label className="block text-sm font-medium text-black mt-3">Car mileage</label>
+                <input
+                  name="mileage"
+                  className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                />
+                <label className="block text-sm font-medium text-black mt-3">VIN number</label>
+                <input
+                  name="vin"
+                  className="shadow appearance-none border rounded w-full py-2 px-1 text-black"
+                />
+                <div className="flex justify-center items-center mt-6 col-span-2">
+                  <button
+                    className="text-white bg-blue-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded-lg shadow hover:shadow-lg hover:bg-blue-600 outline-none focus:outline-none mr-1 mb-1"
+                    type="submit">
+                    Submit
+                  </button>
+                </div>
               </div>
             </form>
           </div>
