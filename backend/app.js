@@ -12,7 +12,8 @@ const { response } = require("express"),
   Users = client.db("WorkShopDB").collection("Users"),
   Cars = client.db("WorkShopDB").collection("Cars"),
   SelectCars = client.db("WorkShopDB").collection("SelectCars"),
-  NewOffers = client.db("WorkShopDB").collection("NewOffers");
+  NewOffers = client.db("WorkShopDB").collection("NewOffers"),
+  Appointments = client.db("WorkShopDB").collection("Appointments");
 app.use(bodyParser.json());
 
 app.post("/addUser", async (req, res) => {
@@ -255,6 +256,35 @@ app.post("/dashboard/profile/edit", async (req, res) => {
         if (err) throw err;
         if (result) {
           return res.status(201).send("Profile edited successfully!");
+        }
+      }
+    );
+  }
+});
+
+app.post("/dashboard/appointment/add", async (req, res) => {
+  const { token, carId, date, hours, phone, car, repairCategory, description } = req.body;
+  if (token != null) {
+    const decoded = jwt.decode(token);
+    const userId = decoded.userId;
+    Appointments.insertOne(
+      {
+        userId: userId,
+        carId: carId,
+        date: date,
+        hours: hours,
+        phone: phone,
+        car: car,
+        repairCategory: repairCategory,
+        description: description
+      },
+      (err, appointment) => {
+        if (err) {
+          return res.status(500).send("Error");
+        }
+
+        if (appointment) {
+          return res.status(201).send("Appointment created successfully!");
         }
       }
     );
