@@ -154,7 +154,32 @@ app.post("/dashboard/cars/addcar", async (req, res) => {
             VinNumber: vin,
             Year: year
           });
-          return res.status(201).send("Car added successfully");
+          return res.status(201).send("Car added successfully!");
+        }
+      }
+    );
+  }
+});
+app.post("/dashboard/cars/edit", async (req, res) => {
+  const { carBrand, carModel, engine, hp, mileage, vin, year, token, carId } = req.body;
+  if (token != null) {
+    Cars.updateOne(
+      { _id: new ObjectId(carId) },
+      {
+        $set: {
+          CarBrand: carBrand,
+          CarModel: carModel,
+          Engine: engine,
+          Hp: hp,
+          Mileage: mileage,
+          VinNumber: vin,
+          Year: year
+        }
+      },
+      function (err, result) {
+        if (err) throw err;
+        if (result) {
+          return res.status(201).send("Car edited successfully!");
         }
       }
     );
