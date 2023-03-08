@@ -220,6 +220,47 @@ app.post("/dashboard/profile", async (req, res) => {
   }
 });
 
+app.post("/dashboard/profile/edit", async (req, res) => {
+  const {
+    email,
+    firstName,
+    lastName,
+    city,
+    country,
+    phoneNumber,
+    stateProvince,
+    zipPostal,
+    street,
+    token
+  } = req.body;
+  if (token != null) {
+    const decoded = jwt.decode(token);
+    const userId = decoded.userId;
+    Users.updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $set: {
+          Email: email,
+          FirstName: firstName,
+          LastName: lastName,
+          City: city,
+          Country: country,
+          PhoneNumber: phoneNumber,
+          StateProvince: stateProvince,
+          ZipPostal: zipPostal,
+          Street: street
+        }
+      },
+      function (err, result) {
+        if (err) throw err;
+        if (result) {
+          return res.status(201).send("Profile edited successfully!");
+        }
+      }
+    );
+  }
+});
+
 const PORT = process.env.API_PORT;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
