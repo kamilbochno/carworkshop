@@ -11,7 +11,8 @@ const { response } = require("express"),
   client = new MongoClient(process.env.URL),
   Users = client.db("WorkShopDB").collection("Users"),
   Cars = client.db("WorkShopDB").collection("Cars"),
-  SelectCars = client.db("WorkShopDB").collection("SelectCars");
+  SelectCars = client.db("WorkShopDB").collection("SelectCars"),
+  NewOffers = client.db("WorkShopDB").collection("NewOffers");
 app.use(bodyParser.json());
 
 app.post("/addUser", async (req, res) => {
@@ -105,6 +106,17 @@ app.get("/dashboard/cars/addcar/getCars", async (req, res) => {
     }
   });
 });
+app.get("/dashboard/newOffers", async (req, res) => {
+  NewOffers.find().toArray((err, newOffers) => {
+    if (err) {
+      return res.status(500).send("No data");
+    }
+
+    if (newOffers) {
+      return res.status(200).send(newOffers);
+    }
+  });
+});
 
 app.post("/dashboard/cars/addcar", async (req, res) => {
   const { carBrand, carModel, engine, hp, mileage, vin, year, token } = req.body;
@@ -150,22 +162,18 @@ app.post("/dashboard/cars/addcar", async (req, res) => {
 });
 
 app.post("/dashboard/cars/delete", async (req, res) => {
-  const { token } = req.body;
-  if (token != null) {
-    const decoded = jwt.decode(token);
-    const userId = decoded.userId;
+  const { carId } = req.body;
 
-    Cars.find({ UserId: userId }).toArray((err, car) => {
-      console.log(decoded.userId);
-      if (err) {
-        return res.status(500).send("d");
-      }
+  Cars.deleteOne({ _id: new ObjectId(carId) }, function (err, car) {
+    console.log(carId);
+    if (err) {
+      return res.status(500).send("d");
+    }
 
-      if (car) {
-        return res.status(200).send(car);
-      }
-    });
-  }
+    if (car) {
+      return res.status(200).send("Car deleted successfully");
+    }
+  });
 });
 
 app.post("/dashboard/profile", async (req, res) => {
