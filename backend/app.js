@@ -13,6 +13,7 @@ const { response } = require("express"),
   Cars = client.db("WorkShopDB").collection("Cars"),
   SelectCars = client.db("WorkShopDB").collection("SelectCars"),
   NewOffers = client.db("WorkShopDB").collection("NewOffers"),
+  EngineOils = client.db("WorkShopDB").collection("EngineOils"),
   Appointments = client.db("WorkShopDB").collection("Appointments");
 app.use(bodyParser.json());
 
@@ -107,6 +108,7 @@ app.get("/dashboard/cars/addcar/getCars", async (req, res) => {
     }
   });
 });
+
 app.get("/dashboard/newOffers", async (req, res) => {
   NewOffers.find().toArray((err, newOffers) => {
     if (err) {
@@ -260,6 +262,30 @@ app.post("/dashboard/profile/edit", async (req, res) => {
       }
     );
   }
+});
+
+app.get("/dashboard/appointments", async (res) => {
+  Appointments.find().toArray((err, appointment) => {
+    if (err) {
+      return res.status(500).send("Error");
+    }
+
+    if (appointment) {
+      return res.status(201).send(appointment);
+    }
+  });
+});
+
+app.get("/dashboard/shop/engineoils", async (res) => {
+  EngineOils.find().toArray((err, engineoil) => {
+    if (err) {
+      return res.status(500).send("Error");
+    }
+
+    if (engineoil) {
+      return res.status(201).send(engineoil);
+    }
+  });
 });
 
 app.post("/dashboard/appointment/add", async (req, res) => {
