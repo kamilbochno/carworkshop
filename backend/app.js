@@ -14,7 +14,9 @@ const { response } = require("express"),
   SelectCars = client.db("WorkShopDB").collection("SelectCars"),
   NewOffers = client.db("WorkShopDB").collection("NewOffers"),
   EngineOils = client.db("WorkShopDB").collection("EngineOils"),
-  Appointments = client.db("WorkShopDB").collection("Appointments");
+  Appointments = client.db("WorkShopDB").collection("Appointments"),
+  Employees = client.db("WorkShopDB").collection("Employees");
+
 app.use(bodyParser.json());
 
 app.post("/addUser", async (req, res) => {
@@ -264,7 +266,7 @@ app.post("/dashboard/profile/edit", async (req, res) => {
   }
 });
 
-app.get("/dashboard/appointments", async (res) => {
+app.get("/dashboard/appointments", async (req, res) => {
   Appointments.find().toArray((err, appointment) => {
     if (err) {
       return res.status(500).send("Error");
@@ -276,7 +278,7 @@ app.get("/dashboard/appointments", async (res) => {
   });
 });
 
-app.get("/dashboard/shop/engineoils", async (res) => {
+app.get("/dashboard/shop/engineoils", async (req, res) => {
   EngineOils.find().toArray((err, engineoil) => {
     if (err) {
       return res.status(500).send("Error");
@@ -315,6 +317,18 @@ app.post("/dashboard/appointment/add", async (req, res) => {
       }
     );
   }
+});
+
+app.get("/dashboard/admin/employees", async (req, res) => {
+  Employees.find().toArray((err, employee) => {
+    if (err) {
+      return res.status(500).send("Error");
+    }
+
+    if (employee) {
+      return res.status(201).send(employee);
+    }
+  });
 });
 
 const PORT = process.env.API_PORT;
