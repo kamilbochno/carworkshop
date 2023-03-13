@@ -360,6 +360,20 @@ app.post("/dashboard/admin/employees/add", async (req, res) => {
   );
 });
 
+app.post("/dashboard/admin/employees/delete", async (req, res) => {
+  const { employeeId } = req.body;
+
+  Employees.deleteOne({ _id: new ObjectId(employeeId) }, function (err, employee) {
+    if (err) {
+      return res.status(500).send("Error");
+    }
+
+    if (employee) {
+      return res.status(200).send("Employee deleted successfully");
+    }
+  });
+});
+
 const PORT = process.env.API_PORT;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
