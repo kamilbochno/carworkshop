@@ -331,6 +331,35 @@ app.get("/dashboard/admin/employees", async (req, res) => {
   });
 });
 
+app.post("/dashboard/admin/employees/add", async (req, res) => {
+  const { name, surName, phone, role, salary, city, email, stateProvince, street, zipPostal } =
+    req.body;
+
+  Employees.insertOne(
+    {
+      Name: name,
+      Surname: surName,
+      Phone: phone,
+      Role: role,
+      Salary: salary,
+      City: city,
+      Email: email,
+      StateProvince: stateProvince,
+      Street: street,
+      ZipPostal: zipPostal
+    },
+    (err, appointment) => {
+      if (err) {
+        return res.status(500).send("Error");
+      }
+
+      if (appointment) {
+        return res.status(201).send("Employee added successfully!");
+      }
+    }
+  );
+});
+
 const PORT = process.env.API_PORT;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
