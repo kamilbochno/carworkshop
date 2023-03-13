@@ -374,6 +374,45 @@ app.post("/dashboard/admin/employees/delete", async (req, res) => {
   });
 });
 
+app.post("/dashboard/admin/employees/edit", async (req, res) => {
+  const {
+    name,
+    surName,
+    phone,
+    city,
+    email,
+    stateProvince,
+    street,
+    zipPostal,
+    role,
+    salary,
+    employeeId
+  } = req.body;
+  Employees.updateOne(
+    { _id: new ObjectId(employeeId) },
+    {
+      $set: {
+        Name: name,
+        Surname: surName,
+        Phone: phone,
+        Role: role,
+        Salary: salary,
+        City: city,
+        Email: email,
+        StateProvince: stateProvince,
+        Street: street,
+        ZipPostal: zipPostal
+      }
+    },
+    function (err, result) {
+      if (err) throw err;
+      if (result) {
+        return res.status(201).send("Employee edited successfully!");
+      }
+    }
+  );
+});
+
 const PORT = process.env.API_PORT;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
