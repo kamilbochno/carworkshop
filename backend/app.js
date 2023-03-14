@@ -428,6 +428,20 @@ app.get("/dashboard/admin/appointments", async (req, res) => {
   });
 });
 
+app.post("/dashboard/admin/appointments/delete", async (req, res) => {
+  const { appointmentId } = req.body;
+
+  Appointments.deleteOne({ _id: new ObjectId(appointmentId) }, function (err, appointment) {
+    if (err) {
+      return res.status(500).send("Error");
+    }
+
+    if (appointment) {
+      return res.status(201).send("Appointment deleted successfully");
+    }
+  });
+});
+
 const PORT = process.env.API_PORT;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
