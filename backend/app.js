@@ -15,7 +15,8 @@ const { response } = require("express"),
   NewOffers = client.db("WorkShopDB").collection("NewOffers"),
   EngineOils = client.db("WorkShopDB").collection("EngineOils"),
   Appointments = client.db("WorkShopDB").collection("Appointments"),
-  Employees = client.db("WorkShopDB").collection("Employees");
+  Employees = client.db("WorkShopDB").collection("Employees"),
+  Services = client.db("WorkShopDB").collection("Services");
 
 app.use(bodyParser.json());
 
@@ -457,6 +458,18 @@ app.post("/dashboard/admin/appointments/delete", async (req, res) => {
 
     if (appointment) {
       return res.status(201).send("Appointment deleted successfully");
+    }
+  });
+});
+
+app.get("/dashboard/admin/services", async (req, res) => {
+  Services.find().toArray((err, service) => {
+    if (err) {
+      return res.status(500).send("Error");
+    }
+
+    if (service) {
+      return res.status(201).send(service);
     }
   });
 });
