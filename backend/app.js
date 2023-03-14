@@ -428,6 +428,25 @@ app.get("/dashboard/admin/appointments", async (req, res) => {
   });
 });
 
+app.post("/dashboard/admin/appointments/edit", async (req, res) => {
+  const { description, status, appointmentId } = req.body;
+  Appointments.updateOne(
+    { _id: new ObjectId(appointmentId) },
+    {
+      $set: {
+        description: description,
+        status: status
+      }
+    },
+    function (err, result) {
+      if (err) throw err;
+      if (result) {
+        return res.status(201).send("Appointment edited successfully!");
+      }
+    }
+  );
+});
+
 app.post("/dashboard/admin/appointments/delete", async (req, res) => {
   const { appointmentId } = req.body;
 
