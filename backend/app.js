@@ -291,7 +291,8 @@ app.get("/dashboard/shop/engineoils", async (req, res) => {
 });
 
 app.post("/dashboard/appointment/add", async (req, res) => {
-  const { token, carId, date, hours, phone, car, repairCategory, description } = req.body;
+  const { token, carId, date, hours, phone, car, repairCategory, description, status, client } =
+    req.body;
   if (token != null) {
     const decoded = jwt.decode(token);
     const userId = decoded.userId;
@@ -304,7 +305,9 @@ app.post("/dashboard/appointment/add", async (req, res) => {
         phone: phone,
         car: car,
         repairCategory: repairCategory,
-        description: description
+        description: description,
+        status: status,
+        client
       },
       (err, appointment) => {
         if (err) {
@@ -411,6 +414,18 @@ app.post("/dashboard/admin/employees/edit", async (req, res) => {
       }
     }
   );
+});
+
+app.get("/dashboard/admin/appointments", async (req, res) => {
+  Appointments.find().toArray((err, appointment) => {
+    if (err) {
+      return res.status(500).send("Error");
+    }
+
+    if (appointment) {
+      return res.status(201).send(appointment);
+    }
+  });
 });
 
 const PORT = process.env.API_PORT;
