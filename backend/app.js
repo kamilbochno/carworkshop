@@ -13,7 +13,8 @@ const { response } = require("express"),
   Cars = client.db("WorkShopDB").collection("Cars"),
   SelectCars = client.db("WorkShopDB").collection("SelectCars"),
   NewOffers = client.db("WorkShopDB").collection("NewOffers"),
-  EngineOils = client.db("WorkShopDB").collection("EngineOils"),
+  CarRepairShopItems = client.db("WorkShopDB").collection("CarRepairShopItems"),
+  CarShopItems = client.db("WorkShopDB").collection("CarShopItems"),
   Appointments = client.db("WorkShopDB").collection("Appointments"),
   Employees = client.db("WorkShopDB").collection("Employees"),
   Services = client.db("WorkShopDB").collection("Services");
@@ -279,14 +280,14 @@ app.get("/dashboard/appointments", async (req, res) => {
   });
 });
 
-app.get("/dashboard/shop/engineoils", async (req, res) => {
-  EngineOils.find().toArray((err, engineoil) => {
+app.get("/dashboard/shop/carshopitems", async (req, res) => {
+  CarShopItems.find().toArray((err, item) => {
     if (err) {
       return res.status(500).send("Error");
     }
 
-    if (engineoil) {
-      return res.status(201).send(engineoil);
+    if (item) {
+      return res.status(201).send(item);
     }
   });
 });
