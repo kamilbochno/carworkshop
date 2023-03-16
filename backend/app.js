@@ -475,6 +475,30 @@ app.get("/dashboard/admin/services", async (req, res) => {
   });
 });
 
+app.get("/dashboard/admin/warehouse/carshopitems", async (req, res) => {
+  CarShopItems.find().toArray((err, item) => {
+    if (err) {
+      return res.status(500).send("Error");
+    }
+
+    if (item) {
+      return res.status(201).send(item);
+    }
+  });
+});
+
+app.get("/dashboard/admin/warehouse/carrepairshopitems", async (req, res) => {
+  CarRepairShopItems.find().toArray((err, item) => {
+    if (err) {
+      return res.status(500).send("Error");
+    }
+
+    if (item) {
+      return res.status(201).send(item);
+    }
+  });
+});
+
 const PORT = process.env.API_PORT;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
