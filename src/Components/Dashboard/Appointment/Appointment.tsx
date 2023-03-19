@@ -2,8 +2,8 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import Footer from "../Footer/Footer.tsx";
 import logo from "./logo.svg";
-import { useState, useEffect } from "react";
-import { NavLink, Routes, Route, useParams } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { NavLink, Routes, Route, useParams, useNavigate } from "react-router-dom";
 import { Container } from "@mui/system";
 import routes from "../routes/menu.tsx";
 import { Box } from "@mui/material";
@@ -16,13 +16,20 @@ import DashboardNavigation from "../DashboardNavigation/DashboardNavigation.tsx"
 import DashboardFooter from "../DashboardFooter/DashboardFooter.tsx";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import UserCarsContext from "../../context/userContext/UserCarsProvider.tsx";
+import UserContext from "../../context/userContext/UserProvider.tsx";
+import axios from "axios";
 
 function Appointment() {
+  const { cars, getCars } = useContext<any>(UserCarsContext);
+  const { profileInfo, getUserProfile } = useContext<any>(UserContext);
+
   const [value, onChange] = useState(new Date());
   const day = value.getDate();
   const month = value.getMonth() + 1;
   const year = value.getFullYear();
 
+  const navigate = useNavigate();
   const appointmentHours = [
     {
       hours: "08:00-09:00"
@@ -69,6 +76,58 @@ function Appointment() {
       title: "Other"
     }
   ];
+
+  useEffect(() => {
+    getUserProfile();
+    getCars();
+  }, []);
+
+  const handleSubmitAppointment = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    const carId = cars[e.target.car.value]._id;
+    const client = profileInfo.FirstName + " " + profileInfo.LastName;
+    const car = cars[e.target.car.value].CarBrand + " " + cars[e.target.car.value].CarModel;
+    console.log(carId);
+    const appointmentData = {
+      token: token,
+      carId: carId,
+      date: e.target.date.value,
+      hours: e.target.hours.value,
+      phone: e.target.phone.value,
+      car: car,
+      repairCategory: e.target.repairCategory.value,
+      description: e.target.description.value,
+      status: "Pending",
+      client: client
+    };
+    if (
+      appointmentData.token &&
+      appointmentData.carId &&
+      appointmentData.date &&
+      appointmentData.hours &&
+      appointmentData.phone &&
+      appointmentData.car &&
+      appointmentData.repairCategory &&
+      appointmentData.description
+    ) {
+      try {
+        const appointment = await axios
+          .post("/dashboard/appointment/add", appointmentData)
+          .then((res) => {
+            if (res.status === 201) {
+              navigate("/dashboard/");
+              console.log(res.data);
+            }
+          });
+      } catch (err) {
+        if (err.response.status === 400) {
+          console.log(err.response.data);
+        }
+      }
+    }
+  };
+
   return (
     <main>
       <DashboardNavigation />
@@ -103,82 +162,81 @@ function Appointment() {
                   Fill details
                 </div>
                 <div className="mx-auto max-w-md">
-                  <form action="#" method="POST">
+                  <form onSubmit={handleSubmitAppointment}>
                     <div className="overflow-hidden sm:rounded-md">
                       <div className="bg-white px-4 py-5 sm:p-6">
                         <div className="grid grid-cols-2 gap-2">
                           <div className="">
-                            <label
-                              htmlFor="email-address"
-                              className="block text-sm font-medium leading-6 text-gray-900">
+                            <label className="block text-sm font-medium leading-6 text-gray-900">
                               Date
                             </label>
                             <input
                               type="text"
-                              name="email-address"
-                              id="email-address"
-                              autoComplete="email"
+                              name="date"
+                              id="date"
                               value={day + "." + month + "." + year}
                               className="mt-2 pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
                           </div>
 
                           <div className="">
-                            <label
-                              htmlFor="street-address"
-                              className="block text-sm font-medium leading-6 text-gray-900">
+                            <label className="block text-sm font-medium leading-6 text-gray-900">
                               Hours
                             </label>
                             <select
-                              name="street-address"
-                              id="street-address"
-                              autoComplete="street-address"
+                              name="hours"
+                              id="hours"
                               className="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                              <option value={""} selected disabled>
+                                Select...
+                              </option>
                               {appointmentHours.map((hour) => (
                                 <option key={hour.hours}>{hour.hours}</option>
                               ))}
                             </select>
                           </div>
                           <div className="">
-                            <label
-                              htmlFor="street-address"
-                              className="block text-sm font-medium leading-6 text-gray-900">
+                            <label className="block text-sm font-medium leading-6 text-gray-900">
                               Phone number
                             </label>
                             <input
-                              type="number"
-                              name="street-address"
-                              id="street-address"
-                              autoComplete="street-address"
+                              name="phone"
+                              defaultValue={profileInfo.PhoneNumber}
+                              id="phone"
                               className="mt-2 pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
                           </div>
 
                           <div className="">
-                            <label
-                              htmlFor="city"
-                              className="block text-sm font-medium leading-6 text-gray-900">
+                            <label className="block text-sm font-medium leading-6 text-gray-900">
                               Car
                             </label>
                             <select
-                              name="city"
-                              id="city"
-                              autoComplete="address-level2"
-                              className="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            />
+                              name="car"
+                              id="car"
+                              className="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                              <option value={""} selected disabled>
+                                Select...
+                              </option>
+                              {cars.map((car, index) => (
+                                <option value={index}>
+                                  {car.CarBrand} {car.CarModel}
+                                </option>
+                              ))}
+                            </select>
                           </div>
 
                           <div className="col-span-2">
-                            <label
-                              htmlFor="region"
-                              className="block text-sm font-medium leading-6 text-gray-900">
+                            <label className="block text-sm font-medium leading-6 text-gray-900">
                               Repair category
                             </label>
                             <select
-                              name="region"
-                              id="region"
-                              autoComplete="address-level1"
+                              name="repairCategory"
+                              id="repairCategory"
                               className="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                              <option value={""} selected disabled>
+                                Select...
+                              </option>
                               {repairCategory.map((category) => (
                                 <option key={category.title}>{category.title}</option>
                               ))}
@@ -186,15 +244,13 @@ function Appointment() {
                           </div>
 
                           <div className="col-span-2">
-                            <label
-                              htmlFor="postal-code"
-                              className="block text-sm font-medium leading-6 text-gray-900">
+                            <label className="block text-sm font-medium leading-6 text-gray-900">
                               Description of the car problem
                             </label>
                             <textarea
                               maxLength={3000}
-                              name="postal-code"
-                              id="postal-code"
+                              name="description"
+                              id="description"
                               className="resize-none pl-2 h-24 mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
                           </div>
@@ -204,7 +260,7 @@ function Appointment() {
                         <button
                           type="submit"
                           className="inline-flex justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
-                          Save
+                          Submit
                         </button>
                       </div>
                     </div>
