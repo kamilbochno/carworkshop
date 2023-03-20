@@ -499,6 +499,20 @@ app.get("/dashboard/admin/warehouse/carrepairshopitems", async (req, res) => {
   });
 });
 
+app.post("/dashboard/admin/warehouse/carrepairshopitems/delete", async (req, res) => {
+  const { itemId } = req.body;
+
+  CarRepairShopItems.deleteOne({ _id: new ObjectId(itemId) }, function (err, item) {
+    if (err) {
+      return res.status(500).send("Error");
+    }
+
+    if (item) {
+      return res.status(201).send("Car repair shop item deleted successfully");
+    }
+  });
+});
+
 const PORT = process.env.API_PORT;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
