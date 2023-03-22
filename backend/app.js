@@ -564,38 +564,104 @@ app.post("/dashboard/admin/warehouse/carrepairshopitems/add", async (req, res) =
   });
 });
 
-app.post("/dashboard/admin/warehouse/carrepairshopitems/delete", async (req, res) => {
-  const { itemId, key } = req.body;
-  const params = {
-    Bucket: "carworkshop-product-image-upload",
-    Key: key
-  };
-  const command = new DeleteObjectCommand(params);
-  await s3.send(command);
+app.post("/dashboard/admin/warehouse/carshopitems/add", async (req, res) => {
+  const { formData } = req.body;
 
-  CarRepairShopItems.deleteOne({ _id: new ObjectId(itemId) }, function (err, item) {
-    if (err) {
-      return res.status(500).send("Error");
-    }
+  console.log(req.body);
+  const uploadSingle = upload("carworkshop-product-image-upload").single("image");
 
-    if (item) {
-      return res.status(201).send("Car repair shop item deleted successfully");
+  uploadSingle(req, res, (err) => {
+    if (err) return res.status(400).json({ success: false, message: err.message });
+
+    console.log(req.file.key);
+    if (res) {
+      CarShopItems.insertOne(
+        {
+          title: req.body.title,
+          description: req.body.description,
+          price: req.body.price,
+          quantity: req.body.quantity,
+          src: req.file.location,
+          category: req.body.category,
+          key: req.file.key
+        },
+        (err, product) => {
+          if (err) {
+            return res.status(500).send("Error");
+          }
+
+          if (product) {
+            return res.status(201).send("Car shop item added successfully!");
+          }
+        }
+      );
     }
   });
 });
 
+app.post("/dashboard/admin/warehouse/carrepairshopitems/delete", async (req, res) => {
+  const { itemId, key } = req.body;
+
+  if (key) {
+    const params = {
+      Bucket: "carworkshop-product-image-upload",
+      Key: key
+    };
+    const command = new DeleteObjectCommand(params);
+    await s3.send(command);
+
+    CarRepairShopItems.deleteOne({ _id: new ObjectId(itemId) }, function (err, item) {
+      if (err) {
+        return res.status(500).send("Error");
+      }
+
+      if (item) {
+        return res.status(201).send("Car repair shop item deleted successfully");
+      }
+    });
+  } else {
+    CarRepairShopItems.deleteOne({ _id: new ObjectId(itemId) }, function (err, item) {
+      if (err) {
+        return res.status(500).send("Error");
+      }
+
+      if (item) {
+        return res.status(201).send("Car repair shop item deleted successfully");
+      }
+    });
+  }
+});
+
 app.post("/dashboard/admin/warehouse/carshopitems/delete", async (req, res) => {
-  const { itemId } = req.body;
+  const { itemId, key } = req.body;
+  if (key) {
+    const params = {
+      Bucket: "carworkshop-product-image-upload",
+      Key: key
+    };
+    const command = new DeleteObjectCommand(params);
+    await s3.send(command);
 
-  CarShopItems.deleteOne({ _id: new ObjectId(itemId) }, function (err, item) {
-    if (err) {
-      return res.status(500).send("Error");
-    }
+    CarShopItems.deleteOne({ _id: new ObjectId(itemId) }, function (err, item) {
+      if (err) {
+        return res.status(500).send("Error");
+      }
 
-    if (item) {
-      return res.status(201).send("Car shop item deleted successfully");
-    }
-  });
+      if (item) {
+        return res.status(201).send("Car shop item deleted successfully");
+      }
+    });
+  } else {
+    CarShopItems.deleteOne({ _id: new ObjectId(itemId) }, function (err, item) {
+      if (err) {
+        return res.status(500).send("Error");
+      }
+
+      if (item) {
+        return res.status(201).send("Car shop item deleted successfully");
+      }
+    });
+  }
 });
 
 const PORT = process.env.API_PORT;
