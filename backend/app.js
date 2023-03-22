@@ -515,6 +515,29 @@ app.post("/dashboard/admin/services/add", async (req, res) => {
   );
 });
 
+app.post("/dashboard/admin/services/edit", async (req, res) => {
+  const { date, client, car, repairPrice, partsPrice, vin, serviceId } = req.body;
+  Services.updateOne(
+    { _id: new ObjectId(serviceId) },
+    {
+      $set: {
+        date: date,
+        client: client,
+        car: car,
+        repairPrice: repairPrice,
+        partsPrice: partsPrice,
+        vin: vin
+      }
+    },
+    function (err, result) {
+      if (err) throw err;
+      if (result) {
+        return res.status(200).send("Service edited successfully!");
+      }
+    }
+  );
+});
+
 app.post("/dashboard/admin/services/delete", async (req, res) => {
   const { serviceId } = req.body;
 
