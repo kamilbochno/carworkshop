@@ -491,6 +491,44 @@ app.get("/dashboard/admin/services", async (req, res) => {
   });
 });
 
+app.post("/dashboard/admin/services/add", async (req, res) => {
+  const { date, client, car, repairPrice, partsPrice, vin } = req.body;
+
+  Services.insertOne(
+    {
+      date: date,
+      client: client,
+      car: car,
+      repairPrice: repairPrice,
+      partsPrice: partsPrice,
+      vin: vin
+    },
+    (err, service) => {
+      if (err) {
+        return res.status(500).send("Error");
+      }
+
+      if (service) {
+        return res.status(201).send("Service added successfully!");
+      }
+    }
+  );
+});
+
+app.post("/dashboard/admin/services/delete", async (req, res) => {
+  const { serviceId } = req.body;
+
+  Services.deleteOne({ _id: new ObjectId(serviceId) }, function (err, service) {
+    if (err) {
+      return res.status(500).send("Error");
+    }
+
+    if (service) {
+      return res.status(200).send("Service deleted successfully");
+    }
+  });
+});
+
 app.get("/dashboard/admin/warehouse/carshopitems", async (req, res) => {
   CarShopItems.find().toArray((err, item) => {
     if (err) {
