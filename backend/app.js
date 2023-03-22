@@ -4,6 +4,9 @@ const jwt = require("jsonwebtoken");
 const express = require("express"),
   app = express();
 const { MongoClient, ObjectId } = require("mongodb");
+const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const multer = require("multer");
+const multerS3 = require("multer-s3");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const User = require("./Models/userModel");
@@ -20,6 +23,18 @@ const { response } = require("express"),
   Services = client.db("WorkShopDB").collection("Services");
 
 app.use(bodyParser.json());
+
+const s3 = new S3Client({
+  region: process.env.S3_BUCKET_REGION,
+  credentials: {
+    accessKeyId: process.env.S3_ACCESS_KEY,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    region: process.env.S3_BUCKET_REGION
+  },
+  sslEnabled: false,
+  s3ForcePathStyle: true,
+  signatureVersion: "v4"
+});
 
 app.post("/addUser", async (req, res) => {
   const { email, first_name, last_name, password } = req.body;
@@ -499,8 +514,64 @@ app.get("/dashboard/admin/warehouse/carrepairshopitems", async (req, res) => {
   });
 });
 
+const upload = (bucketName) =>
+  multer({
+    storage: multerS3({
+      s3,
+      bucket: bucketName,
+      contentType: multerS3.AUTO_CONTENT_TYPE,
+      metadata: function (req, image, cb) {
+        cb(null, { fieldName: image.fieldname });
+      },
+      key: function (req, image, cb) {
+        cb(null, `${Date.now()}-${image.originalname}`);
+      }
+    })
+  });
+
+app.post("/dashboard/admin/warehouse/carrepairshopitems/add", async (req, res) => {
+  const { formData } = req.body;
+
+  console.log(req.body);
+  const uploadSingle = upload("carworkshop-product-image-upload").single("image");
+
+  uploadSingle(req, res, (err) => {
+    if (err) return res.status(400).json({ success: false, message: err.message });
+
+    console.log(req.file.key);
+    if (res) {
+      CarRepairShopItems.insertOne(
+        {
+          title: req.body.title,
+          description: req.body.description,
+          price: req.body.price,
+          quantity: req.body.quantity,
+          src: req.file.location,
+          category: req.body.category,
+          key: req.file.key
+        },
+        (err, product) => {
+          if (err) {
+            return res.status(500).send("Error");
+          }
+
+          if (product) {
+            return res.status(201).send("Car repair shop item added successfully!");
+          }
+        }
+      );
+    }
+  });
+});
+
 app.post("/dashboard/admin/warehouse/carrepairshopitems/delete", async (req, res) => {
-  const { itemId } = req.body;
+  const { itemId, key } = req.body;
+  const params = {
+    Bucket: "carworkshop-product-image-upload",
+    Key: key
+  };
+  const command = new DeleteObjectCommand(params);
+  await s3.send(command);
 
   CarRepairShopItems.deleteOne({ _id: new ObjectId(itemId) }, function (err, item) {
     if (err) {
