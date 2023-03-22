@@ -23,6 +23,7 @@ const { response } = require("express"),
   Services = client.db("WorkShopDB").collection("Services");
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const s3 = new S3Client({
   region: process.env.S3_BUCKET_REGION,
@@ -564,6 +565,44 @@ app.post("/dashboard/admin/warehouse/carrepairshopitems/add", async (req, res) =
   });
 });
 
+app.post("/dashboard/admin/warehouse/carrepairshopitems/edit", async (req, res) => {
+  const { formData } = req.body;
+
+  const uploadSingle = upload("carworkshop-product-image-upload").single("image");
+
+  uploadSingle(req, res, (err) => {
+    if (err) return res.status(400).json({ success: false, message: err.message });
+    console.log(req.file);
+    const params = {
+      Bucket: "carworkshop-product-image-upload",
+      Key: req.body.key
+    };
+    const command = new DeleteObjectCommand(params);
+    s3.send(command);
+
+    CarRepairShopItems.updateOne(
+      { _id: new ObjectId(req.body.itemId) },
+      {
+        $set: {
+          title: req.body.title,
+          description: req.body.description,
+          price: req.body.price,
+          quantity: req.body.quantity,
+          src: req.file.location,
+          category: req.body.category,
+          key: req.file.key
+        }
+      },
+      function (err, result) {
+        if (err) throw err;
+        if (result) {
+          return res.status(201).send("Car repair shop item edited successfully!");
+        }
+      }
+    );
+  });
+});
+
 app.post("/dashboard/admin/warehouse/carshopitems/add", async (req, res) => {
   const { formData } = req.body;
 
@@ -596,6 +635,44 @@ app.post("/dashboard/admin/warehouse/carshopitems/add", async (req, res) => {
         }
       );
     }
+  });
+});
+
+app.post("/dashboard/admin/warehouse/carshopitems/edit", async (req, res) => {
+  const { formData } = req.body;
+
+  const uploadSingle = upload("carworkshop-product-image-upload").single("image");
+
+  uploadSingle(req, res, (err) => {
+    if (err) return res.status(400).json({ success: false, message: err.message });
+    console.log(req.file);
+    const params = {
+      Bucket: "carworkshop-product-image-upload",
+      Key: req.body.key
+    };
+    const command = new DeleteObjectCommand(params);
+    s3.send(command);
+
+    CarShopItems.updateOne(
+      { _id: new ObjectId(req.body.itemId) },
+      {
+        $set: {
+          title: req.body.title,
+          description: req.body.description,
+          price: req.body.price,
+          quantity: req.body.quantity,
+          src: req.file.location,
+          category: req.body.category,
+          key: req.file.key
+        }
+      },
+      function (err, result) {
+        if (err) throw err;
+        if (result) {
+          return res.status(201).send("Car shop item edited successfully!");
+        }
+      }
+    );
   });
 });
 
