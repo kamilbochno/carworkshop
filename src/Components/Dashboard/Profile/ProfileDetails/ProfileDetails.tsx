@@ -2,58 +2,56 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import Footer from "../Footer/Footer.tsx";
 import logo from "./logo.svg";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { NavLink, Routes, Route, useParams } from "react-router-dom";
-import { Container } from "@mui/system";
-import routes from "../routes/menu.tsx";
-import { Box } from "@mui/material";
-import Tabs from "@mui/material";
-import Tab from "@mui/material";
-import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import DashboardNavigation from "../../DashboardNavigation/DashboardNavigation.tsx";
 import DashboardFooter from "../../DashboardFooter/DashboardFooter.tsx";
+import UserContext from "../../../context/userContext/UserProvider.tsx";
 
 function ProfileDetails() {
+  const { profileInfo, setProfileInfo, getUserProfile } = useContext<any>(UserContext);
+
   const account = [
     {
       title: "First name",
-      content: "John"
+      content: profileInfo.FirstName
     },
     {
       title: "Last name",
-      content: "Doe"
+      content: profileInfo.LastName
     },
     {
       title: "Email address",
-      content: "johndoe@gmail.com"
+      content: profileInfo.Email
     },
     {
       title: "Phone number",
-      content: "123456789"
+      content: profileInfo.PhoneNumber
     },
     {
       title: "Country",
-      content: "123456789"
+      content: profileInfo.Country
     },
     {
       title: "Street address",
-      content: "daa"
+      content: profileInfo.Street
     },
     {
       title: "City",
-      content: "New york"
+      content: profileInfo.City
     },
     {
       title: "State / Province",
-      content: "Ohio"
+      content: profileInfo.StateProvince
     },
     {
       title: "ZIP / Postal code",
-      content: "31-422"
+      content: profileInfo.ZipPostal
     }
   ];
+  useEffect(() => {
+    getUserProfile();
+  }, []);
 
   return (
     <div className="main">
@@ -83,9 +81,9 @@ function ProfileDetails() {
                       {info.title}
                     </div>
                     <div
-                      key={info.title}
+                      key={info.content}
                       className="mt-4 text-lg tracking-tight text-gray-600 ml-6">
-                      {info.content}
+                      {info.content ? info.content : "No information"}
                     </div>
                   </div>
                 ))}
