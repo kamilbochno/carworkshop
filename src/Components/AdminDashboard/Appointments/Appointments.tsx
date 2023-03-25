@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import AppointmentsTable from "./AppointmentsTable/AppointmentsTable.tsx";
+import AppointmentsPaginated from "./AppointmentsTable/AppointmentsTable.tsx";
 import AppointmentDetails from "./AppointmentDetails/AppointmentDetails.tsx";
 import EditAppointment from "./EditAppointment/EditAppointment.tsx";
 import DeleteAppointment from "./DeleteAppointment/DeleteAppointment.tsx";
@@ -8,7 +8,7 @@ import DeleteAppointment from "./DeleteAppointment/DeleteAppointment.tsx";
 function Appointments() {
   return (
     <div>
-      <AppointmentsTable />
+      <AppointmentsPaginated itemsPerPage={5} />
       <AppointmentDetails />
       <EditAppointment />
       <DeleteAppointment />
