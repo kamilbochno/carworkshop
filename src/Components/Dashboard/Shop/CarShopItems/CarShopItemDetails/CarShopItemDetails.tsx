@@ -4,6 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import { ShoppingCartIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import ShopContext from "../../../../context/userContext/ShopProvider.tsx";
+import toast from "react-hot-toast";
 function CarShopItemDetails() {
   const {
     isOpenCarShopItemDetails,
@@ -37,8 +38,9 @@ function CarShopItemDetails() {
       setItemsInCart(itemsInCart + 1);
       localStorage.setItem("cart", JSON.stringify(userCartItems));
       setIsOpenCarShopItemDetails(false);
+      toast.success("Successfully added item to cart!");
     } else {
-      console.log("This item is already in your cart!");
+      toast.error("This item is already in your cart!");
     }
   };
   if (!isOpenCarShopItemDetails) return null;

@@ -17,10 +17,10 @@ import ShopContext from "../../context/userContext/ShopProvider.tsx";
 import CarShopItemsPaginated from "./CarShopItems/CarShopItems.tsx";
 import CarShopItemDetails from "./CarShopItems/CarShopItemDetails/CarShopItemDetails.tsx";
 import Spinner from "../../InfoElements/Spinner.tsx";
+import { Toaster } from "react-hot-toast";
 
 function Shop() {
   const {
-    carShopItems,
     getCarShopItems,
     carShopItemsCategory,
     itemCategory,
@@ -70,6 +70,14 @@ function Shop() {
           </div>
         </div>
         <Spinner />
+        <Toaster
+          position="bottom-right"
+          reverseOrder={false}
+          gutter={8}
+          toastOptions={{
+            duration: 3000
+          }}
+        />
         <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-4 grid-cols-1 gap-x-8 gap-y-8">
             <div className="bg-white h-100 rounded-lg border-2 border-solid border-gray-300">

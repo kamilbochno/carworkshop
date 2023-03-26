@@ -20,6 +20,7 @@ import UserCarsContext from "../../context/userContext/UserCarsProvider.tsx";
 import UserContext from "../../context/userContext/UserProvider.tsx";
 import axios from "axios";
 import Spinner from "../../InfoElements/Spinner.tsx";
+import toast, { Toaster } from "react-hot-toast";
 
 function Appointment() {
   const { cars, getCars } = useContext<any>(UserCarsContext);
@@ -113,17 +114,17 @@ function Appointment() {
       appointmentData.description
     ) {
       try {
-        const appointment = await axios
-          .post("/dashboard/appointment/add", appointmentData)
-          .then((res) => {
-            if (res.status === 201) {
+        await axios.post("/dashboard/appointment/add", appointmentData).then((res) => {
+          if (res.status === 201) {
+            toast.success(res.data);
+            setTimeout(() => {
               navigate("/dashboard/");
-              console.log(res.data);
-            }
-          });
+            }, 3500);
+          }
+        });
       } catch (err) {
         if (err.response.status === 400) {
-          console.log(err.response.data);
+          toast.error(err.response.data);
         }
       }
     }
@@ -133,6 +134,14 @@ function Appointment() {
     <main>
       <DashboardNavigation />
       <Spinner />
+      <Toaster
+        position="bottom-right"
+        reverseOrder={false}
+        gutter={8}
+        toastOptions={{
+          duration: 3000
+        }}
+      />
       <div className="bg-gray-100 mx-auto py-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 border-b-2 border-gray-300">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">Appointment</h1>

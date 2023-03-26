@@ -1,10 +1,31 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
+import UserCarsContext from "../../../context/userContext/UserCarsProvider.tsx";
+import toast from "react-hot-toast";
 
-function DeleteCar({ openDeleteCar, setIsOpenDeleteCar, carDeleteId }) {
-  if (!openDeleteCar) {
+function DeleteCar() {
+  const { isOpenDeleteCar, setIsOpenDeleteCar, car, getCars } = useContext<any>(UserCarsContext);
+
+  const deleteCar = async () => {
+    const carId = { carId: car._id };
+    try {
+      await axios.post("/dashboard/cars/delete", carId).then((res) => {
+        if (res.status === 200) {
+          setIsOpenDeleteCar(false);
+          getCars();
+          toast.success("Car deleted successfully!");
+        }
+      });
+    } catch (err) {
+      if (err.response.status === 400) {
+        toast.error(err.response.data);
+      }
+    }
+  };
+
+  if (!isOpenDeleteCar) {
     return null;
   }
 
@@ -30,23 +51,24 @@ function DeleteCar({ openDeleteCar, setIsOpenDeleteCar, carDeleteId }) {
             </svg>
             <span className="sr-only">Close modal</span>
           </button>
-          <div className="relative p-4 flex-auto">
+          <div className="relative p-4">
             <div className="px-8-full">
               <p className="block mb-8 text-sm font-medium text-lg text-black">
-                Are you sure to delete this car?
+                Are you sure to delete {car.CarBrand} {car.CarModel}?
               </p>
-              <button
-                onClick={() => console.log(carDeleteId)}
-                className="text-white bg-red-600 hover:bg-red-700 active:bg-gray-400 font-bold uppercase text-sm px-6 py-3 border-2 border-gray-500 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
-                type="submit">
-                Yes, i'm sure
-              </button>
-              <button
-                className="text-black bg-transparent hover:bg-gray-200 active:bg-gray-400 font-bold uppercase text-sm px-6 py-3 border-2 border-gray-500 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
-                onClick={() => setIsOpenDeleteCar(false)}
-                type="button">
-                No, cancel
-              </button>
+              <div className="text-center">
+                <button
+                  className="text-white bg-red-600 hover:bg-red-700 active:bg-gray-400 font-bold uppercase text-sm px-6 py-3 border-2 border-gray-500 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                  onClick={() => deleteCar()}>
+                  Yes, i'm sure
+                </button>
+                <button
+                  className="text-black bg-transparent hover:bg-gray-200 active:bg-gray-400 font-bold uppercase text-sm px-6 py-3 border-2 border-gray-500 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                  onClick={() => setIsOpenDeleteCar(false)}
+                  type="button">
+                  No, cancel
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -3,8 +3,12 @@ import { Fragment, useState, useEffect, useContext } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { MinusIcon, PlusIcon, ShoppingCartIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import ShopContext from "../../../context/userContext/ShopProvider.tsx";
+import axios from "axios";
+import LoadingContext from "../../../context/LoadingProvider.tsx";
+import toast from "react-hot-toast";
 
 export default function ShoppingCart() {
+  const { setIsLoading } = useContext<any>(LoadingContext);
   const {
     openCart,
     setIsOpenCart,
@@ -30,6 +34,7 @@ export default function ShoppingCart() {
     setUserCartItems(newItems);
     setSubtotal(totalPrice);
     setItemsInCart(itemsInCart - 1);
+    toast.success("successfully removed item from cart!");
   };
 
   const decreaseQuantity = (index) => {
@@ -50,6 +55,17 @@ export default function ShoppingCart() {
       items[index] = item;
       setUserCartItems(items);
     }
+  };
+
+  const setCheckout = () => {
+    const items = {
+      items: userCartItems
+    };
+    setIsLoading(true);
+    axios.post("/dashboard/shop/create-checkout-session", items).then((response) => {
+      window.location = response.data;
+      setIsLoading(false);
+    });
   };
 
   return (
@@ -178,6 +194,7 @@ export default function ShoppingCart() {
                       </p>
                       <div className="mt-6">
                         <button
+                          onClick={() => setCheckout()}
                           disabled={userCartItems.length === 0}
                           className="flex items-center w-full justify-center rounded-md border border-transparent bg-blue-500 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-600">
                           Checkout
