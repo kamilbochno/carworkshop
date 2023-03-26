@@ -3,17 +3,27 @@ import * as ReactDOM from "react-dom";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import AppointmentContext from "../../../context/adminContext/AppointmentProvider.tsx";
+import toast from "react-hot-toast";
 
 function DeleteAppointment() {
   const { isOpenDeleteAppointment, setIsOpenDeleteAppointment, appointment, getAppointments } =
     useContext<any>(AppointmentContext);
 
-  const deleteAppointment = () => {
+  const deleteAppointment = async () => {
     const appointmentId = { appointmentId: appointment._id };
-    axios.post("/dashboard/admin/appointments/delete", appointmentId).then((response) => {
-      setIsOpenDeleteAppointment(false);
-      getAppointments();
-    });
+    try {
+      await axios.post("/dashboard/admin/appointments/delete", appointmentId).then((res) => {
+        if (res.status === 201) {
+          setIsOpenDeleteAppointment(false);
+          getAppointments();
+          toast.success(res.data);
+        }
+      });
+    } catch (err) {
+      if (err.response.status === 400) {
+        toast.error(err.response.data);
+      }
+    }
   };
 
   if (!isOpenDeleteAppointment) {

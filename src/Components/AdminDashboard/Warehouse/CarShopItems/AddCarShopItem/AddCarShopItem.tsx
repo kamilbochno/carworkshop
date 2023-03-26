@@ -4,6 +4,8 @@ import { useState, useEffect, useContext } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import WarehouseContext from "../../../../context/adminContext/WarehouseProvider.tsx";
+import toast from "react-hot-toast";
+
 function AddCarShopItem() {
   const { isOpenAddCarShopItem, setIsOpenAddCarShopItem, itemCategory, getCarShopItems } =
     useContext<any>(WarehouseContext);
@@ -31,18 +33,18 @@ function AddCarShopItem() {
     };
     if (formData) {
       try {
-        const carShopItem = await axios
+        await axios
           .post("/dashboard/admin/warehouse/carshopitems/add", formData, config)
           .then((res) => {
             if (res.status === 201) {
               setIsOpenAddCarShopItem(false);
               getCarShopItems();
-              console.log(res.data);
+              toast.success(res.data);
             }
           });
       } catch (err) {
         if (err.response.status === 400) {
-          console.log(err.response.data);
+          toast.error(err.response.data);
         }
       }
     }

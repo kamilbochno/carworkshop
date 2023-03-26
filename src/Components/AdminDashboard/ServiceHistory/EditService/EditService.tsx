@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import AdminServicesHistoryContext from "../../../context/adminContext/ServicesHistoryProvider.tsx";
+import toast from "react-hot-toast";
 
 function EditService() {
   const { isOpenEditService, setIsOpenEditService, service, getServices } = useContext<any>(
@@ -30,17 +31,16 @@ function EditService() {
       serviceData.vin
     ) {
       try {
-        const service = await axios
-          .post("/dashboard/admin/services/edit", serviceData)
-          .then((res) => {
-            if (res.status === 200) {
-              setIsOpenEditService(false);
-              getServices();
-            }
-          });
+        await axios.post("/dashboard/admin/services/edit", serviceData).then((res) => {
+          if (res.status === 200) {
+            setIsOpenEditService(false);
+            getServices();
+            toast.success(res.data);
+          }
+        });
       } catch (err) {
         if (err.response.status === 400) {
-          console.log(err.response.data);
+          toast.error(err.response.data);
         }
       }
     }

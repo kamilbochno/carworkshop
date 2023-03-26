@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import AppointmentContext from "../../../context/adminContext/AppointmentProvider.tsx";
+import toast from "react-hot-toast";
 
 function EditAppointment() {
   const { isOpenEditAppointment, setIsOpenEditAppointment, appointment, getAppointments } =
@@ -29,17 +30,16 @@ function EditAppointment() {
     };
     if (appointmentData.description && appointmentData.status) {
       try {
-        const appointment = await axios
-          .post("/dashboard/admin/appointments/edit", appointmentData)
-          .then((res) => {
-            if (res.status === 201) {
-              setIsOpenEditAppointment(false);
-              getAppointments();
-            }
-          });
+        await axios.post("/dashboard/admin/appointments/edit", appointmentData).then((res) => {
+          if (res.status === 201) {
+            setIsOpenEditAppointment(false);
+            getAppointments();
+            toast.success(res.data);
+          }
+        });
       } catch (err) {
         if (err.response.status === 400) {
-          console.log(err.response.data);
+          toast.error(err.response.data);
         }
       }
     }

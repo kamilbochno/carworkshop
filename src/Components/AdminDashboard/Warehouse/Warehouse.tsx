@@ -24,6 +24,7 @@ import CarShopItemDetails from "./CarShopItems/CarShopItemDetails/carShopItemDet
 import DeleteCarShopItem from "./CarShopItems/DeleteCarShopItem/DeleteCarShopItem.tsx";
 import EditCarShopItem from "./CarShopItems/EditCarShopItem/EditCarShopItem.tsx";
 import Spinner from "../../InfoElements/Spinner.tsx";
+import { Toaster } from "react-hot-toast";
 
 function Warehouse() {
   const {
@@ -59,6 +60,14 @@ function Warehouse() {
     <div className="main">
       <DashboardNavigation />
       <Spinner />
+      <Toaster
+        position="bottom-right"
+        reverseOrder={false}
+        gutter={8}
+        toastOptions={{
+          duration: 3000
+        }}
+      />
       <div className="bg-gray-100 mx-auto py-6">
         <div className="mx-auto grid grid-cols-4 max-w-7xl py-6 px-4 sm:px-6 lg:px-8 border-b-2 border-gray-300">
           <h1 className="pt-4 text-3xl font-bold tracking-tight text-gray-900">Warehouse</h1>

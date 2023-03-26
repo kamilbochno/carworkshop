@@ -3,17 +3,27 @@ import * as ReactDOM from "react-dom";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import WarehouseContext from "../../../../context/adminContext/WarehouseProvider.tsx";
+import toast from "react-hot-toast";
 
 function DeleteCarShopItem() {
   const { isOpenCarShopItemDelete, setIsOpenCarShopItemDelete, carShopItem, getCarShopItems } =
     useContext<any>(WarehouseContext);
 
-  const DeleteCarShopItem = () => {
+  const DeleteCarShopItem = async () => {
     const itemId = { itemId: carShopItem._id, key: carShopItem.key };
-    axios.post("/dashboard/admin/warehouse/carshopitems/delete", itemId).then((response) => {
-      setIsOpenCarShopItemDelete(false);
-      getCarShopItems();
-    });
+    try {
+      await axios.post("/dashboard/admin/warehouse/carshopitems/delete", itemId).then((res) => {
+        if (res.status === 201) {
+          setIsOpenCarShopItemDelete(false);
+          getCarShopItems();
+          toast.success(res.data);
+        }
+      });
+    } catch (err) {
+      if (err.response.status === 400) {
+        toast.error(err.response.data);
+      }
+    }
   };
 
   if (!isOpenCarShopItemDelete) {

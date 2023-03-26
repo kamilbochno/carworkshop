@@ -3,18 +3,27 @@ import * as ReactDOM from "react-dom";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import AdminServicesHistoryContext from "../../../context/adminContext/ServicesHistoryProvider.tsx";
+import toast from "react-hot-toast";
 
 function DeleteService() {
   const { isOpenDeleteService, setIsOpenDeleteService, service, getServices } = useContext<any>(
     AdminServicesHistoryContext
   );
-
-  const deleteService = () => {
+  const deleteService = async () => {
     const serviceId = { serviceId: service._id };
-    axios.post("/dashboard/admin/services/delete", serviceId).then((response) => {
-      setIsOpenDeleteService(false);
-      getServices();
-    });
+    try {
+      await axios.post("/dashboard/admin/services/delete", serviceId).then((res) => {
+        if (res.status === 200) {
+          setIsOpenDeleteService(false);
+          getServices();
+          toast.success("Service deleted successfully!");
+        }
+      });
+    } catch (err) {
+      if (err.response.status === 400) {
+        toast.error(err.response.data);
+      }
+    }
   };
 
   if (!isOpenDeleteService) {

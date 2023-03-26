@@ -10,11 +10,20 @@ import EditEmployee from "./EditEmployee/EditEmployee.tsx";
 import DeleteEmployee from "./DeleteEmployee/DeleteEmployee.tsx";
 import EmployeeDetails from "./EmployeeDetails/EmployeeDetails.tsx";
 import Spinner from "../../InfoElements/Spinner.tsx";
+import { Toaster } from "react-hot-toast";
 
 function Employees() {
   return (
     <div>
       <Spinner />
+      <Toaster
+        position="bottom-right"
+        reverseOrder={false}
+        gutter={8}
+        toastOptions={{
+          duration: 3000
+        }}
+      />
       <AdminDashboardNavigation />
       <EmployeesTable />
       <EmployeeDetails />

@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import EmployeesContext from "../../../context/adminContext/EmployeesProvider.tsx";
+import { toast } from "react-hot-toast";
 
 function EditCar() {
   const { isOpenEditEmployee, setIsOpenEditEmployee, employee, employeeRole, getEmployees } =
@@ -36,17 +37,16 @@ function EditCar() {
       employeeData.salary
     ) {
       try {
-        const employee = await axios
-          .post("/dashboard/admin/employees/edit", employeeData)
-          .then((res) => {
-            if (res.status === 201) {
-              setIsOpenEditEmployee(false);
-              getEmployees();
-            }
-          });
+        await axios.post("/dashboard/admin/employees/edit", employeeData).then((res) => {
+          if (res.status === 201) {
+            setIsOpenEditEmployee(false);
+            getEmployees();
+            toast.success(res.data);
+          }
+        });
       } catch (err) {
         if (err.response.status === 400) {
-          console.log(err.response.data);
+          toast.error(err.response.data);
         }
       }
     }

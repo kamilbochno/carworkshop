@@ -4,6 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import EmployeesContext from "../../../context/adminContext/EmployeesProvider.tsx";
+import { toast } from "react-hot-toast";
 function AddCar() {
   const {
     isOpenAddEmployee,
@@ -45,18 +46,16 @@ function AddCar() {
       employeeData.salary
     ) {
       try {
-        const employee = await axios
-          .post("/dashboard/admin/employees/add", employeeData)
-          .then((res) => {
-            if (res.status === 201) {
-              setIsOpenAddEmployee(false);
-              getEmployees();
-              console.log(res.data);
-            }
-          });
+        await axios.post("/dashboard/admin/employees/add", employeeData).then((res) => {
+          if (res.status === 201) {
+            setIsOpenAddEmployee(false);
+            getEmployees();
+            toast.success(res.data);
+          }
+        });
       } catch (err) {
         if (err.response.status === 400) {
-          console.log(err.response.data);
+          toast.error(err.response.data);
         }
       }
     }

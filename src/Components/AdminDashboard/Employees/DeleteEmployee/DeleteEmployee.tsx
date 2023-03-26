@@ -3,17 +3,28 @@ import * as ReactDOM from "react-dom";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import EmployeesContext from "../../../context/adminContext/EmployeesProvider.tsx";
+import toast from "react-hot-toast";
 
 function DeleteCar() {
   const { isOpenDeleteEmployee, setIsOpenDeleteEmployee, employee, getEmployees } =
     useContext<any>(EmployeesContext);
 
-  const deleteEmployee = () => {
+  const deleteEmployee = async () => {
     const employeeId = { employeeId: employee._id };
-    axios.post("/dashboard/admin/employees/delete", employeeId).then((response) => {
-      setIsOpenDeleteEmployee(false);
-      getEmployees();
-    });
+
+    try {
+      await axios.post("/dashboard/admin/employees/delete", employeeId).then((res) => {
+        if (res.status === 200) {
+          setIsOpenDeleteEmployee(false);
+          getEmployees();
+          toast.success(res.data);
+        }
+      });
+    } catch (err) {
+      if (err.response.status === 400) {
+        toast.error(err.response.data);
+      }
+    }
   };
 
   if (!isOpenDeleteEmployee) {
