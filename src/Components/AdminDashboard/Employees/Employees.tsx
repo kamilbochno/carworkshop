@@ -9,10 +9,12 @@ import AddEmployee from "./AddEmployee/AddEmployee.tsx";
 import EditEmployee from "./EditEmployee/EditEmployee.tsx";
 import DeleteEmployee from "./DeleteEmployee/DeleteEmployee.tsx";
 import EmployeeDetails from "./EmployeeDetails/EmployeeDetails.tsx";
+import Spinner from "../../InfoElements/Spinner.tsx";
 
 function Employees() {
   return (
     <div>
+      <Spinner />
       <AdminDashboardNavigation />
       <EmployeesTable />
       <EmployeeDetails />

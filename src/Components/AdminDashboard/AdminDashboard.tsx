@@ -26,6 +26,7 @@ import EmployeesContext from "../context/adminContext/EmployeesProvider.tsx";
 import Appointments from "./Appointments/Appointments.tsx";
 import ServicesHistory from "./ServiceHistory/ServicesHistory.tsx";
 import EmployeesPaginated from "./Employees/EmployeesOverview.tsx";
+import Spinner from "../InfoElements/Spinner.tsx";
 
 function AdminDashboard() {
   const { appointment, setAppointment, appointments, setAppointments, getAppointments } =
@@ -41,6 +42,7 @@ function AdminDashboard() {
   return (
     <div className="main">
       <DashboardNavigation />
+      <Spinner />
       <div className="bg-gray-100 py-6">
         <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 border-b-2 border-gray-300">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>

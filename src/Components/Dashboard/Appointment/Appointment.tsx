@@ -19,6 +19,7 @@ import "react-calendar/dist/Calendar.css";
 import UserCarsContext from "../../context/userContext/UserCarsProvider.tsx";
 import UserContext from "../../context/userContext/UserProvider.tsx";
 import axios from "axios";
+import Spinner from "../../InfoElements/Spinner.tsx";
 
 function Appointment() {
   const { cars, getCars } = useContext<any>(UserCarsContext);
@@ -131,6 +132,7 @@ function Appointment() {
   return (
     <main>
       <DashboardNavigation />
+      <Spinner />
       <div className="bg-gray-100 mx-auto py-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 border-b-2 border-gray-300">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">Appointment</h1>
@@ -259,7 +261,7 @@ function Appointment() {
                       <div className="px-4 pb-4 text-center sm:px-6">
                         <button
                           type="submit"
-                          className="inline-flex justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+                          className="inline-flex justify-center rounded-md bg-blue-500 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
                           Submit
                         </button>
                       </div>

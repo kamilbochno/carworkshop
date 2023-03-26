@@ -8,10 +8,12 @@ import CarsTable from "./CarsTable/CarsTable.tsx";
 import AddCar from "./AddCar/AddCar.tsx";
 import DeleteCar from "./DeleteCar/DeleteCar.tsx";
 import EditCar from "./EditCar/EditCar.tsx";
+import Spinner from "../../InfoElements/Spinner.tsx";
 
 function MyCars() {
   return (
     <div>
+      <Spinner />
       <DashboardNavigation />
       <CarsTable></CarsTable>
       <AddCar />

@@ -7,6 +7,7 @@ import { NavLink, Routes, Route, useParams } from "react-router-dom";
 import DashboardNavigation from "../../DashboardNavigation/DashboardNavigation.tsx";
 import DashboardFooter from "../../DashboardFooter/DashboardFooter.tsx";
 import UserContext from "../../../context/userContext/UserProvider.tsx";
+import Spinner from "../../../InfoElements/Spinner.tsx";
 
 function ProfileDetails() {
   const { profileInfo, setProfileInfo, getUserProfile } = useContext<any>(UserContext);
@@ -56,6 +57,7 @@ function ProfileDetails() {
   return (
     <div className="main">
       <DashboardNavigation />
+      <Spinner />
       <main>
         <div className="bg-gray-100 mx-auto py-6 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 border-b-2 border-gray-300">
