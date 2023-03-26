@@ -1,10 +1,12 @@
 import React from "react";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useContext } from "react";
 import axios from "axios";
+import LoadingContext from "../LoadingProvider.tsx";
 
 const UserCarsContext = createContext({});
 
 export const UserCarsProvider = ({ children }) => {
+  const { setIsLoading } = useContext<any>(LoadingContext);
   const [isOpenAddCar, setIsOpenAddCar] = useState(false);
   const [isOpenEditCar, setIsOpenEditCar] = useState(false);
   const [isOpenDeleteCar, setIsOpenDeleteCar] = useState(false);
@@ -23,10 +25,11 @@ export const UserCarsProvider = ({ children }) => {
 
   const [cars, setCars] = useState<any>([]);
   const getCars = () => {
+    setIsLoading(true);
     const token = { token: localStorage.getItem("token") };
     axios.post("/dashboard/cars", token).then((response) => {
       setCars(response.data);
-      console.log(token);
+      setIsLoading(false);
     });
   };
 

@@ -1,10 +1,12 @@
 import React from "react";
-import { createContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
 import axios from "axios";
+import LoadingContext from "../LoadingProvider.tsx";
 
 const WarehouseContext = createContext({});
 
 export const WarehouseProvider = ({ children }) => {
+  const { setIsLoading } = useContext<any>(LoadingContext);
   const [search, setSearch] = useState("");
   const [carRepairShopItems, setCarRepairShopItems] = useState<any>([]);
   const [carRepairShopItem, setCarRepairShopItem] = useState<any>([]);
@@ -44,18 +46,22 @@ export const WarehouseProvider = ({ children }) => {
   ];
 
   const getCarRepairShopItems = () => {
+    setIsLoading(true);
     axios.get("/dashboard/admin/warehouse/carrepairshopitems").then((response) => {
       const data = response.data;
       setCarRepairShopItems(data);
       setSearchCarRepairShopItems(data);
+      setIsLoading(false);
     });
   };
 
   const getCarShopItems = () => {
+    setIsLoading(true);
     axios.get("/dashboard/admin/warehouse/carshopitems").then((response) => {
       const data = response.data;
       setCarShopItems(data);
       setSearchCarShopItems(data);
+      setIsLoading(false);
     });
   };
 

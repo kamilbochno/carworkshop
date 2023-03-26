@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { createContext, useState } from "react";
 import axios from "axios";
+import LoadingContext from "../LoadingProvider.tsx";
 
 const ShopContext = createContext({});
 
@@ -36,11 +37,15 @@ export const ShopProvider = ({ children }) => {
     }
   ];
 
+  const { setIsLoading } = useContext<any>(LoadingContext);
+
   const getCarShopItems = () => {
+    setIsLoading(true);
     axios.get("/dashboard/shop/carshopitems").then((response) => {
       const data = response.data;
       setCarShopItems(data);
       setSearchCarShopItems(data);
+      setIsLoading(false);
     });
   };
 

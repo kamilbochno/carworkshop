@@ -1,10 +1,12 @@
 import React from "react";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useContext } from "react";
 import axios from "axios";
+import LoadingContext from "../LoadingProvider.tsx";
 
 const EmployeesContext = createContext({});
 
 export const EmployeesProvider = ({ children }) => {
+  const { setIsLoading } = useContext<any>(LoadingContext);
   const [isOpenAddEmployee, setIsOpenAddEmployee] = useState(false);
   const [isOpenEditEmployee, setIsOpenEditEmployee] = useState(false);
   const [isOpenDeleteEmployee, setIsOpenDeleteEmployee] = useState(false);
@@ -25,9 +27,11 @@ export const EmployeesProvider = ({ children }) => {
   const [employees, setEmployees] = useState<any>([]);
 
   const getEmployees = () => {
+    setIsLoading(true);
     axios.get("/dashboard/admin/employees").then((response) => {
       let employeesData = response.data;
       setEmployees(employeesData);
+      setIsLoading(false);
     });
   };
 
