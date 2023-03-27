@@ -2,18 +2,31 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import UserCarsContext from "../../../context/UserCarsProvider.tsx";
-function AddCar() {
-  const { isOpenAddCar, setIsOpenAddCar, getCars } = useContext<any>(UserCarsContext);
-  const [carsData, setCarsData] = useState<any>([]);
-  const [carModels, setCarModels] = useState<any>([]);
+import UserCarsContext from "../../../context/userContext/UserCarsProvider.tsx";
+import toast from "react-hot-toast";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
 
-  const getCarsData = () => {
-    axios.get("/dashboard/cars/addcar/getCars").then((response) => {
-      let carsData = response.data;
-      setCarsData(carsData);
-    });
-  };
+function AddCar() {
+  const { isOpenAddCar, setIsOpenAddCar, getCars, carsData, carModels, setCarModels, getCarsData } =
+    useContext<any>(UserCarsContext);
+
+  interface IFormInput {
+    token: String;
+    carBrand: String;
+    carModel: String;
+    engine: String;
+    hp: String;
+    year: Number;
+    mileage: Number;
+    vin: String;
+  }
+
+  const {
+    register,
+    formState: { errors },
+    handleSubmit
+  } = useForm<IFormInput>({ criteriaMode: "all" });
 
   useEffect(() => {
     getCarsData();
@@ -28,53 +41,26 @@ function AddCar() {
   function handleChangeModel(e) {
     console.log(e.target.value);
   }
-
-  const handleSubmitCar = async (e) => {
-    e.preventDefault();
+  const date = new Date();
+  const currentYear = date.getFullYear();
+  const handleSubmitCar: SubmitHandler<IFormInput> = async (data) => {
     const token = localStorage.getItem("token");
-    const carBrand = e.target.carBrand.value;
-    const carModel = e.target.carModel.value;
-    const engine = e.target.engine.value;
-    const hp = e.target.hp.value;
-    const year = e.target.year.value;
-    const mileage = e.target.mileage.value;
-    const vin = e.target.vin.value;
-
-    const carData = {
-      carBrand: carBrand,
-      carModel: carModel,
-      engine: engine,
-      hp: hp,
-      year: year,
-      mileage: mileage,
-      vin: vin,
-      token: token
-    };
-    if (
-      carData.carBrand &&
-      carData.carModel &&
-      carData.engine &&
-      carData.hp &&
-      carData.year &&
-      carData.mileage &&
-      carData.vin
-    ) {
-      try {
-        const car = await axios.post("/dashboard/cars/addcar", carData).then((res) => {
-          if (res.status === 201) {
-            setIsOpenAddCar(false);
-            getCars();
-            console.log(res.data);
-          }
-        });
-      } catch (err) {
-        if (err.response.status === 400) {
-          console.log(err.response.data);
+    data.token = String(token);
+    try {
+      await axios.post("/dashboard/cars/addcar", data).then((res) => {
+        if (res.status === 201) {
+          setIsOpenAddCar(false);
+          getCars();
+          toast.success(res.data);
         }
+      });
+    } catch (err) {
+      if (err.response.status === 400) {
+        toast.error(err.response.data);
       }
     }
-    console.log(carData);
   };
+
   if (!isOpenAddCar) return null;
 
   return (
@@ -103,67 +89,214 @@ function AddCar() {
             </button>
           </div>
           <div className="relative p-4 flex-auto">
-            <form className="px-8 w-full" onSubmit={handleSubmitCar}>
+            <form className="px-8 w-full" onSubmit={handleSubmit(handleSubmitCar)}>
               <div className="grid grid-cols-2">
-                <label className="block text-sm font-medium text-black mt-3">
-                  Select your car brand
-                </label>
-                <select
-                  id="carBrand"
-                  name="carBrand"
-                  onChange={handleChangeBrand}
-                  className="border mb-2 border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                  <option value={""} selected disabled>
-                    Select...
-                  </option>
-                  {carsData.map((cars) => (
-                    <option key={cars._id} value={cars.brand}>
-                      {cars.brand}
+                <div>
+                  <label className="block text-sm font-medium text-black mt-3">
+                    Select your car brand
+                  </label>
+                </div>
+                <div>
+                  <select
+                    id="carBrand"
+                    {...register("carBrand", { required: "Car brand is required" })}
+                    onChange={handleChangeBrand}
+                    className="border mb-2 border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value={""} selected disabled>
+                      Select...
                     </option>
-                  ))}
-                </select>
-                <label className="block text-sm font-medium text-black mt-3">
-                  Select your car model
-                </label>
-                <select
-                  id="carModel"
-                  name="carModel"
-                  onChange={handleChangeModel}
-                  className="border mb-2 border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                  <option selected disabled>
-                    Select...
-                  </option>
-                  {carModels.map((models) => (
-                    <option value={models}>{models}</option>
-                  ))}
-                </select>
-                <label className="block text-sm font-medium text-black mt-3">Engine</label>
-                <input
-                  name="engine"
-                  className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
-                />
-                <label className="block text-sm font-medium text-black mt-3">Hp</label>
-                <input
-                  name="hp"
-                  className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
-                />
-                <label className="block text-sm font-medium text-black mt-3">
-                  Year of production
-                </label>
-                <input
-                  name="year"
-                  className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
-                />
-                <label className="block text-sm font-medium text-black mt-3">Car mileage</label>
-                <input
-                  name="mileage"
-                  className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
-                />
-                <label className="block text-sm font-medium text-black mt-3">VIN number</label>
-                <input
-                  name="vin"
-                  className="shadow appearance-none border rounded w-full py-2 px-1 text-black"
-                />
+                    {carsData.map((cars) => (
+                      <option key={cars._id} value={cars.brand}>
+                        {cars.brand}
+                      </option>
+                    ))}
+                  </select>
+                  <ErrorMessage
+                    errors={errors}
+                    name="carBrand"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-black mt-3">
+                    Select your car model
+                  </label>
+                </div>
+                <div>
+                  <select
+                    id="carModel"
+                    {...register("carModel", { required: "Car model is required" })}
+                    onChange={handleChangeModel}
+                    className="border mb-2 border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value={""} selected disabled>
+                      Select...
+                    </option>
+                    {carModels.map((models) => (
+                      <option value={models}>{models}</option>
+                    ))}
+                  </select>
+                  <ErrorMessage
+                    errors={errors}
+                    name="carModel"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-black mt-3">Engine</label>
+                </div>
+                <div>
+                  <input
+                    {...register("engine", {
+                      required: "Engine is required"
+                    })}
+                    className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="engine"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-black mt-3">Hp</label>
+                </div>
+                <div>
+                  <input
+                    {...register("hp", {
+                      required: "Hp is required",
+                      pattern: {
+                        value: /^[0-9]*$/,
+                        message: "This input is number only"
+                      }
+                    })}
+                    className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="hp"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-black mt-3">
+                    Year of production
+                  </label>
+                </div>
+                <div>
+                  <input
+                    {...register("year", {
+                      required: "Year is required",
+                      pattern: {
+                        value: /^[0-9]*$/,
+                        message: "This input is number only"
+                      },
+                      min: {
+                        value: 1900,
+                        message: "Min year is 1900"
+                      },
+                      max: {
+                        value: currentYear,
+                        message: "Max year is " + currentYear
+                      }
+                    })}
+                    className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="year"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-black mt-3">Car mileage</label>
+                </div>
+                <div>
+                  <input
+                    {...register("mileage", {
+                      required: "Mileage is required",
+                      pattern: {
+                        value: /^[0-9]*$/,
+                        message: "This input is number only"
+                      }
+                    })}
+                    className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="mileage"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-black mt-3">VIN number</label>
+                </div>
+                <div>
+                  <input
+                    {...register("vin", {
+                      required: "VIN is required",
+                      minLength: {
+                        value: 17,
+                        message: "VIN requires 17 characters"
+                      }
+                    })}
+                    maxLength={17}
+                    className="shadow appearance-none border rounded w-full py-2 px-1 text-black uppercase"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="vin"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
                 <div className="flex justify-center items-center mt-6 col-span-2">
                   <button
                     className="text-white bg-blue-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded-lg shadow hover:shadow-lg hover:bg-blue-600 outline-none focus:outline-none mr-1 mb-1"
