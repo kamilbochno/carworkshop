@@ -5,7 +5,10 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import EmployeesContext from "../../../context/adminContext/EmployeesProvider.tsx";
 import { toast } from "react-hot-toast";
-function AddCar() {
+import { useForm, SubmitHandler } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
+
+function AddEmployee() {
   const {
     isOpenAddEmployee,
     setIsOpenAddEmployee,
@@ -17,49 +20,40 @@ function AddCar() {
     employeeRole
   } = useContext<any>(EmployeesContext);
 
-  useEffect(() => {}, []);
+  interface IFormInput {
+    name: String;
+    surname: String;
+    phone: Number;
+    city: String;
+    email: String;
+    stateProvince: String;
+    street: String;
+    zipPostal: String;
+    role: String;
+    salary: Number;
+  }
+  const {
+    register,
+    formState: { errors },
+    handleSubmit
+  } = useForm<IFormInput>({ criteriaMode: "all" });
 
-  const handleSubmitEmployee = async (e) => {
-    e.preventDefault();
-    const employeeData = {
-      name: e.target.name.value,
-      surName: e.target.surname.value,
-      phone: e.target.phone.value,
-      city: e.target.city.value,
-      email: e.target.email.value,
-      stateProvince: e.target.stateProvince.value,
-      street: e.target.street.value,
-      zipPostal: e.target.zipPostal.value,
-      role: e.target.role.value,
-      salary: e.target.salary.value
-    };
-    if (
-      employeeData.name &&
-      employeeData.surName &&
-      employeeData.phone &&
-      employeeData.city &&
-      employeeData.email &&
-      employeeData.stateProvince &&
-      employeeData.street &&
-      employeeData.zipPostal &&
-      employeeData.role &&
-      employeeData.salary
-    ) {
-      try {
-        await axios.post("/dashboard/admin/employees/add", employeeData).then((res) => {
-          if (res.status === 201) {
-            setIsOpenAddEmployee(false);
-            getEmployees();
-            toast.success(res.data);
-          }
-        });
-      } catch (err) {
-        if (err.response.status === 400) {
-          toast.error(err.response.data);
+  const handleSubmitEmployee: SubmitHandler<IFormInput> = async (data) => {
+    try {
+      await axios.post("/dashboard/admin/employees/add", data).then((res) => {
+        if (res.status === 201) {
+          setIsOpenAddEmployee(false);
+          getEmployees();
+          toast.success(res.data);
         }
+      });
+    } catch (err) {
+      if (err.response.status === 400) {
+        toast.error(err.response.data);
       }
     }
   };
+
   if (!isOpenAddEmployee) return null;
 
   return (
@@ -88,33 +82,125 @@ function AddCar() {
             </button>
           </div>
           <div className="relative p-4 flex-auto">
-            <form className="px-8 w-full" onSubmit={handleSubmitEmployee}>
+            <form className="px-8 w-full" onSubmit={handleSubmit(handleSubmitEmployee)}>
               <div className="grid grid-cols-2 gap-x-4">
                 <div>
                   <label className="block text-sm font-medium text-black mt-3">Name</label>
                   <input
-                    name="name"
+                    type="text"
+                    {...register("name", {
+                      required: "Name is required",
+                      pattern: {
+                        value: /^[a-z ,.'-]+$/i,
+                        message: "Wrong Name format"
+                      }
+                    })}
                     className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="name"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
                   />
                   <label className="block text-sm font-medium text-black mt-3">Surname</label>
                   <input
-                    name="surname"
+                    {...register("surname", {
+                      required: "Surname is required",
+                      pattern: {
+                        value: /^[a-z ,.'-]+$/i,
+                        message: "Wrong Surname format"
+                      }
+                    })}
                     className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="surname"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
                   />
                   <label className="block text-sm font-medium text-black mt-3">Phone</label>
                   <input
-                    name="phone"
+                    {...register("phone", {
+                      required: "Phone is required",
+                      pattern: {
+                        value: /^[0-9]*$/,
+                        message: "This input is number only"
+                      }
+                    })}
                     className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="phone"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
                   />
                   <label className="block text-sm font-medium text-black mt-3">City</label>
                   <input
-                    name="city"
+                    {...register("city", {
+                      required: "City is required",
+                      pattern: {
+                        value: /^[a-zA-Z]+$/,
+                        message: "This input is letters only"
+                      }
+                    })}
                     className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="city"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
                   />
                   <label className="block text-sm font-medium text-black mt-3">Email</label>
                   <input
-                    name="email"
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value:
+                          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+                        message: "Wrong email format"
+                      }
+                    })}
                     className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="email"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
                   />
                 </div>
                 <div>
@@ -122,22 +208,76 @@ function AddCar() {
                     State / Province
                   </label>
                   <input
-                    name="stateProvince"
+                    {...register("stateProvince", {
+                      required: "State/Province is required",
+                      pattern: {
+                        value: /^[a-zA-Z]+$/,
+                        message: "This input is letters only"
+                      }
+                    })}
                     className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="stateProvince"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
                   />
                   <label className="block text-sm font-medium text-black mt-3">Street</label>
                   <input
-                    name="street"
+                    {...register("street", {
+                      required: "Street is required",
+                      pattern: {
+                        value: /^[a-zA-Z]+$/,
+                        message: "This input is letters only"
+                      }
+                    })}
                     className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="street"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
                   />
                   <label className="block text-sm font-medium text-black mt-3">Zip / Postal</label>
                   <input
-                    name="zipPostal"
+                    {...register("zipPostal", {
+                      required: "Zip/Postal is required",
+                      pattern: {
+                        value: /^\d{5}(?:[-\s]\d{4})?$/,
+                        message: "Wrong us postal code format"
+                      }
+                    })}
                     className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="zipPostal"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
                   />
                   <label className="block text-sm font-medium text-black mt-3">Role</label>
                   <select
-                    name="role"
+                    {...register("role", { required: "Role is required" })}
                     id="role"
                     className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black focus:ring-blue-500 focus:border-blue-500 ">
                     <option value={""} selected disabled>
@@ -147,10 +287,34 @@ function AddCar() {
                       <option key={role.title}>{role.title}</option>
                     ))}
                   </select>
+                  <ErrorMessage
+                    errors={errors}
+                    name="role"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mb-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
                   <label className="block text-sm font-medium text-black mt-3">Salary</label>
                   <input
-                    name="salary"
+                    {...register("salary", { required: "Salary is required" })}
                     className="shadow appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="salary"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500 mt-2" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
                   />
                 </div>
                 <div className="flex justify-center items-center mt-6 col-span-2">
@@ -169,4 +333,4 @@ function AddCar() {
   );
 }
 
-export default AddCar;
+export default AddEmployee;

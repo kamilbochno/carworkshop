@@ -5,6 +5,8 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import WarehouseContext from "../../../../context/adminContext/WarehouseProvider.tsx";
 import toast from "react-hot-toast";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
 
 function EditCarShopItem() {
   const {
@@ -15,26 +17,50 @@ function EditCarShopItem() {
     getCarShopItems
   } = useContext<any>(WarehouseContext);
 
-  const handleSubmitCarShopItemEdit = async (e) => {
-    e.preventDefault();
-    const title = e.target.title.value;
-    const description = e.target.description.value;
-    const price = e.target.price.value;
-    const quantity = e.target.quantity.value;
-    const image = e.target.image.files[0];
-    const category = e.target.category.value;
-    const key = carShopItem.key;
-    const itemId = carShopItem._id;
+  interface IFormInput {
+    title: Blob;
+    description: Blob;
+    price: Blob;
+    quantity: Blob;
+    image: Object;
+    category: Blob;
+    key: Blob;
+    itemId: Blob;
+  }
+
+  const {
+    register,
+    reset,
+    formState: { errors },
+    handleSubmit
+  } = useForm<IFormInput>({ criteriaMode: "all" });
+
+  useEffect(() => {
+    if (carShopItem) {
+      reset({
+        title: carShopItem.title,
+        description: carShopItem.description,
+        price: carShopItem.price,
+        quantity: carShopItem.quantity,
+        category: carShopItem.category
+      });
+    }
+  }, [carShopItem]);
+
+  const handleSubmitCarShopItemEdit: SubmitHandler<IFormInput> = async (data) => {
+    data.key = carShopItem.key;
+    data.itemId = carShopItem._id;
+
     const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("price", price);
-    formData.append("quantity", quantity);
-    formData.append("image", image);
-    formData.append("category", category);
-    formData.append("itemId", itemId);
-    formData.append("key", key);
-    console.log(formData.get("key"));
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("quantity", data.quantity);
+    formData.append("image", data.image[0]);
+    formData.append("category", data.category);
+    formData.append("itemId", data.itemId);
+    formData.append("key", data.key);
+
     const config = {
       headers: {
         "content-type": "multipart/form-data"
@@ -85,52 +111,155 @@ function EditCarShopItem() {
             </button>
           </div>
           <div className="relative p-4 flex-auto">
-            <form className="px-8 w-full" onSubmit={handleSubmitCarShopItemEdit}>
+            <form className="px-8 w-full" onSubmit={handleSubmit(handleSubmitCarShopItemEdit)}>
               <div className="grid grid-cols-2 w-72 lg:w-96">
-                <label className="block text-sm font-medium text-black mt-3">Title</label>
-                <input
-                  defaultValue={carShopItem.title}
-                  name="title"
-                  className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
-                />
-                <label className="block h-36 text-sm font-medium text-black mt-3">
-                  Description
-                </label>
-                <textarea
-                  defaultValue={carShopItem.description}
-                  name="description"
-                  className="resize-none shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
-                />
-                <label className="block text-sm font-medium text-black mt-3">Price</label>
-                <input
-                  defaultValue={carShopItem.price}
-                  name="price"
-                  className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
-                />
-                <label className="block text-sm font-medium text-black mt-3">Quantity</label>
-                <input
-                  defaultValue={carShopItem.quantity}
-                  name="quantity"
-                  className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
-                />
-                <label className="block text-sm font-medium text-black mt-3">Image</label>
-                <input
-                  type="file"
-                  name="image"
-                  className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
-                />
-                <label className="block text-sm font-medium text-black mt-3">Category</label>
-                <select
-                  defaultValue={carShopItem.category}
-                  name="category"
-                  className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black focus:ring-blue-500 focus:border-blue-500 ">
-                  <option value={""} selected disabled>
-                    Select...
-                  </option>
-                  {itemCategory.map((item) => (
-                    <option key={item.category}>{item.category}</option>
-                  ))}
-                </select>
+                <div>
+                  <label className="block text-sm font-medium text-black mt-3">Title</label>
+                </div>
+                <div>
+                  <input
+                    {...register("title", { required: "Title is required" })}
+                    className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="title"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="block h-36 text-sm font-medium text-black mt-3">
+                    Description
+                  </label>
+                </div>
+                <div>
+                  <textarea
+                    {...register("description", { required: "Description is required" })}
+                    className="resize-none shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="description"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-black mt-3">Price</label>
+                </div>
+                <div>
+                  <input
+                    {...register("price", {
+                      required: "Price is required",
+                      pattern: {
+                        value: /^[0-9]*$/,
+                        message: "This input is number only"
+                      }
+                    })}
+                    className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="price"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-black mt-3">Quantity</label>
+                </div>
+                <div>
+                  <input
+                    {...register("quantity", {
+                      required: "Quantity is required",
+                      pattern: {
+                        value: /^[0-9]*$/,
+                        message: "This input is number only"
+                      }
+                    })}
+                    className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="quantity"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-black mt-3">Image</label>
+                </div>
+                <div>
+                  <input
+                    type="file"
+                    {...register("image", { required: "Image is required" })}
+                    className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
+                  />
+                  <ErrorMessage
+                    errors={errors}
+                    name="image"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-black mt-3">Category</label>
+                </div>
+                <div>
+                  <select
+                    {...register("category", { required: "Category is required" })}
+                    className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black focus:ring-blue-500 focus:border-blue-500 ">
+                    <option value={""} selected disabled>
+                      Select...
+                    </option>
+                    {itemCategory.map((item) => (
+                      <option key={item.category}>{item.category}</option>
+                    ))}
+                  </select>
+                  <ErrorMessage
+                    errors={errors}
+                    name="category"
+                    render={({ messages }) =>
+                      messages &&
+                      Object.entries(messages).map(([type, message]) => (
+                        <p className="text-sm text-red-500" key={type}>
+                          {message}
+                        </p>
+                      ))
+                    }
+                  />
+                </div>
               </div>
 
               <div className="flex justify-center items-center mt-6 col-span-2">
