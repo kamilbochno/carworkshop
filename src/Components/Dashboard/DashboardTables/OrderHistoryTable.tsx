@@ -4,20 +4,20 @@ import { useState, useEffect, useContext, Fragment } from "react";
 import { NavLink, Routes, Route, useParams } from "react-router-dom";
 import { Menu, Transition } from "@headlessui/react";
 import axios from "axios";
-import ServicesHistoryContext from "../../context/userContext/ServicesHistoryProvider.tsx";
+import OrderHistoryContext from "../../context/userContext/OrderHistoryProvider.tsx";
 import ReactPaginate from "react-paginate";
 
 function Items({ currentItems }) {
-  const { setIsOpenDetailsService, setService, services, getServices } =
-    useContext<any>(ServicesHistoryContext);
+  const { setIsOpenDetailsOrder, setOrder, orders, getOrderHistory } =
+    useContext<any>(OrderHistoryContext);
 
   useEffect(() => {
-    getServices();
+    getOrderHistory();
   }, []);
 
-  function serviceDetails(serviceInfo) {
-    setService(serviceInfo);
-    setIsOpenDetailsService(true);
+  function orderDetails(orderInfo) {
+    setOrder(orderInfo);
+    setIsOpenDetailsOrder(true);
   }
 
   function classNames(...classes) {
@@ -30,13 +30,16 @@ function Items({ currentItems }) {
         <thead className="bg-gray-50 uppercase">
           <tr>
             <th scope="col" className="px-6 py-3 text-xs font-bold text-left text-gray-500 ">
-              Date
+              Order
             </th>
             <th scope="col" className="px-6 py-3 text-xs font-bold text-left text-gray-500">
-              Client
+              Modified
             </th>
             <th scope="col" className="px-6 py-3 text-xs font-bold text-left text-gray-500">
-              Car
+              Price
+            </th>
+            <th scope="col" className="px-6 py-3 text-xs font-bold text-left text-gray-500">
+              Status
             </th>
             <th scope="col" className="px-6 py-3 text-xs font-bold text-left text-gray-500">
               Actions
@@ -44,14 +47,17 @@ function Items({ currentItems }) {
           </tr>
         </thead>
 
-        <tbody id="servicesTable" className="divide-y divide-gray-200">
-          {currentItems.map((service, index) => (
-            <tr id={service._id} key={index}>
-              <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">{service.date}</td>
+        <tbody id="orderHistoryTable" className="divide-y divide-gray-200">
+          {currentItems.map((order, index) => (
+            <tr id={order._id} key={index}>
               <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                {service.client}
+                {order._id.slice(0, 6)}
               </td>
-              <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">{service.car}</td>
+              <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">{order.created}</td>
+              <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
+                ${order.totalPrice}
+              </td>
+              <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">{order.status}</td>
               <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
@@ -80,7 +86,7 @@ function Items({ currentItems }) {
                         <Menu.Item>
                           {({ active }) => (
                             <button
-                              onClick={() => serviceDetails(services[index])}
+                              onClick={() => orderDetails(orders[index])}
                               className={classNames(
                                 active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                                 "block px-4 py-2 text-sm w-24"
@@ -103,18 +109,18 @@ function Items({ currentItems }) {
   );
 }
 
-function ServicesHistoryPaginated({ itemsPerPage }) {
-  const { services } = useContext<any>(ServicesHistoryContext);
+function OrderHistoryPaginated({ itemsPerPage }) {
+  const { orders } = useContext<any>(OrderHistoryContext);
 
   const [itemOffset, setItemOffset] = useState(0);
 
   const endOffset = itemOffset + itemsPerPage;
   console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-  const currentItems = services.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(services.length / itemsPerPage);
+  const currentItems = orders.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(orders.length / itemsPerPage);
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % services.length;
+    const newOffset = (event.selected * itemsPerPage) % orders.length;
     console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
     setItemOffset(newOffset);
   };
@@ -129,9 +135,9 @@ function ServicesHistoryPaginated({ itemsPerPage }) {
           breakLabel="..."
           nextLabel=">"
           onPageChange={handlePageClick}
-          pageClassName="bg-gray-200 border-2 border-gray-100 w-6 text-center font-semibold"
-          previousClassName="bg-blue-400 w-8 h-8 rounded-full text-center text-white"
-          nextClassName="bg-blue-400 w-8 h-8 rounded-full text-center text-white"
+          pageClassName="ml-2 mr-2 text-center text-xl font-semibold"
+          previousClassName="text-center text-2xl text-blue-600 font-semibold"
+          nextClassName="text-center text-2xl text-blue-600 font-semibold"
           containerClassName="inline-flex "
           pageRangeDisplayed={5}
           pageCount={pageCount}
@@ -143,4 +149,4 @@ function ServicesHistoryPaginated({ itemsPerPage }) {
   );
 }
 
-export default ServicesHistoryPaginated;
+export default OrderHistoryPaginated;
