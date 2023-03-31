@@ -42,9 +42,6 @@ function Items({ currentItems }) {
             <th scope="col" className="px-6 py-3 text-xs font-bold text-left text-gray-500 ">
               Order
             </th>
-            <th scope="col" className="px-6 py-3 text-xs font-bold text-left text-gray-500 ">
-              Customer
-            </th>
             <th scope="col" className="px-6 py-3 text-xs font-bold text-left text-gray-500">
               Modified
             </th>
@@ -64,10 +61,7 @@ function Items({ currentItems }) {
           {currentItems.map((purchase, index) => (
             <tr id={purchase._id} key={index}>
               <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                {purchase._id.slice(0, 6)}
-              </td>
-              <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                {purchase.totalPrice}
+                #{purchase._id.slice(0, 6)}
               </td>
               <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
                 {purchase.created}

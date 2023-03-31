@@ -155,9 +155,15 @@ function CarRepairShopItemsPaginated({ itemsPerPage }) {
         />
       </div>
 
-      <div className="max-w-5xl mb-12 pl-4 pr-4 grid grid-cols-1 lg:grid-cols-4 gap-x-6 gap-y-8 mx-auto text-center">
-        <Items currentItems={currentItems} />
-      </div>
+      {currentItems.length === 0 ? (
+        <div className="mt-32 mb-48 text-xl tracking-tight text-gray-400 text-center">
+          No results for the searched items
+        </div>
+      ) : (
+        <div className="max-w-5xl mb-12 mt-8 pl-4 pr-4 grid grid-cols-1 lg:grid-cols-4 gap-x-6 gap-y-8 mx-auto text-center">
+          <Items currentItems={currentItems} />
+        </div>
+      )}
       <div className="mx-auto text-center">
         <ReactPaginate
           breakLabel="..."
