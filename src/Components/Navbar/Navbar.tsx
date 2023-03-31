@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import "./Styles.scss";
 import { useState } from "react";
 import AuthContext from "../context/AuthProvider.tsx";
@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { useNavigate } from "react-router";
 import logo from "../../Icons/mdi_car-wrench.svg";
 import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
+import axios from "axios";
 import {
   ArrowPathIcon,
   Bars3Icon,
@@ -16,18 +17,15 @@ import {
   XMarkIcon
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
-const jwt = require("jsonwebtoken");
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { auth } = useContext(AuthContext);
-  const isAuth = auth;
+  const { auth, admin, isAuthenticated, logout } = useContext<any>(AuthContext);
 
-  const logout = () => {
-    const token = localStorage.getItem("token");
-    localStorage.clear();
-    navigate("/");
-  };
+  useEffect(() => {
+    isAuthenticated();
+  }, [auth]);
+
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
@@ -103,7 +101,7 @@ const Navbar = () => {
                     </a>
                   </div>
                   <div>
-                    {!isAuth && (
+                    {!auth && (
                       <>
                         <li>
                           <a
@@ -121,7 +119,7 @@ const Navbar = () => {
                         </li>
                       </>
                     )}
-                    {isAuth && (
+                    {auth && (
                       <>
                         <li className="list-none">
                           <a
@@ -145,39 +143,59 @@ const Navbar = () => {
             </Dialog.Panel>
           </Dialog>
           <ul className="nav-list lg:text-base text-sm">
-            <li>
-              <a href="/">Home</a>
-            </li>
-            <li>
-              <a href="#about">About</a>
-            </li>
-            <li>
-              <a href="#services">Services</a>
-            </li>
-            <li>
-              <a href="#team">Team</a>
-            </li>
-            <li>
-              <a href="#contact">Contact</a>
-            </li>
-            {!isAuth && (
+            <button>
+              <p>
+                <a href="/">Home</a>
+              </p>
+            </button>
+            <button>
+              <p>
+                <a href="#about">About</a>
+              </p>
+            </button>
+            <button>
+              <p>
+                <a href="#services">Services</a>
+              </p>
+            </button>
+            <button>
+              <p>
+                <a href="#team">Team</a>
+              </p>
+            </button>
+            <button>
+              <p>
+                <a href="#contact">Contact</a>
+              </p>
+            </button>
+            {!auth && (
               <>
-                <li>
-                  <a href="/login">Sign in</a>
-                </li>
-                <li>
-                  <a href="/register">Sign up</a>
-                </li>
+                <button onClick={() => navigate("/login")}>
+                  <p>Sign in</p>
+                </button>
+                <button onClick={() => navigate("/register")}>
+                  <p>Sign up</p>
+                </button>
               </>
             )}
-            {isAuth && (
+            {auth && admin && (
               <>
-                <li>
-                  <a href="/dashboard/">Dashboard</a>
-                </li>
-                <li onClick={logout}>
-                  <a href="">Logout</a>
-                </li>
+                <button onClick={() => navigate("/dashboard/admin/")}>
+                  <p>Dashboard</p>
+                </button>
+                <button onClick={() => logout()}>
+                  <p>Logout</p>
+                </button>
+              </>
+            )}
+            {auth && !admin && (
+              <>
+                <button onClick={() => navigate("/dashboard/")}>
+                  <p>Dashboard</p>
+                </button>
+                <button onClick={() => logout()}>
+                  <p>Logout</p>
+                </button>
               </>
             )}
           </ul>
