@@ -26,6 +26,9 @@ import EmployeesContext from "../context/adminContext/EmployeesProvider.tsx";
 import Appointments from "./Appointments/Appointments.tsx";
 import ServicesHistory from "./ServiceHistory/ServicesHistory.tsx";
 import EmployeesPaginated from "./Employees/EmployeesOverview.tsx";
+import RecentPurchaseDetails from "./RecentPurchases/RecentPurchaseDetails/RecentPurchaseDetails.tsx";
+import RecentPurchasesPaginated from "./RecentPurchases/RecentPurchases.tsx";
+import RecentPurchaseEdit from "./RecentPurchases/RecentPurchaseEdit/RecentPurchaseEdit.tsx";
 import Spinner from "../InfoElements/Spinner.tsx";
 import { Toaster } from "react-hot-toast";
 
@@ -99,37 +102,9 @@ function AdminDashboard() {
               <div className="mt-4 text-2xl tracking-tight text-gray-600 text-center">
                 Recent Purchases
               </div>
-              <table className="mt-4 h-64 bg-gray-50 min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-100 uppercase">
-                  <tr className="">
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-xs font-bold text-left text-gray-500 ">
-                      Order number
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-xs font-bold text-left text-gray-500">
-                      Date
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-xs font-bold text-left text-gray-500">
-                      Last modified
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-xs font-bold text-left text-gray-500">
-                      Customer name
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-xs font-bold text-left text-gray-500">
-                      Status
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-xs font-bold text-left text-gray-500 ">
-                      Total price
-                    </th>
-                  </tr>
-                </thead>
-                <tbody id="carTable" className="divide-y divide-gray-200">
-                  <tr></tr>
-                </tbody>
-              </table>
+              <RecentPurchasesPaginated itemsPerPage={5} />
+              <RecentPurchaseDetails />
+              <RecentPurchaseEdit />
             </div>
           </div>
         </div>
