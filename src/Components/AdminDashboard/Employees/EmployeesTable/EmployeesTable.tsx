@@ -53,7 +53,7 @@ function EmployeesTable() {
         <div className="mt-8 mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
           <button
             onClick={() => setIsOpenAddEmployee(true)}
-            className="bg-blue-500 hover:bg-blue-600 h-10 w-28 rounded-lg text-white mb-4 text-sm font-semibold uppercase ">
+            className="bg-blue-500 hover:bg-blue-600 h-10 w-28 rounded-lg text-white mb-4 text-sm font-semibold ">
             Add employee
           </button>
           <div className="bg-white rounded-lg border-2 border-solid border-gray-300">

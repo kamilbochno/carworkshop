@@ -80,7 +80,7 @@ function Shop() {
         />
         <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-4 grid-cols-1 gap-x-8 gap-y-8">
-            <div className="bg-white h-100 rounded-lg border-2 border-solid border-gray-300">
+            <div className="sm:w-full bg-white h-100 rounded-lg border-2 border-solid border-gray-300">
               <div className="mt-4 text-2xl tracking-tight text-black font-semibold text-center">
                 Filters
               </div>
