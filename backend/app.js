@@ -9,7 +9,8 @@ const multer = require("multer");
 const multerS3 = require("multer-s3");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const User = require("./Models/userModel");
+const cookieparser = require("cookie-parser");
+const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 const { response } = require("express"),
   client = new MongoClient(process.env.URL),
   Users = client.db("WorkShopDB").collection("Users"),
@@ -20,10 +21,23 @@ const { response } = require("express"),
   CarShopItems = client.db("WorkShopDB").collection("CarShopItems"),
   Appointments = client.db("WorkShopDB").collection("Appointments"),
   Employees = client.db("WorkShopDB").collection("Employees"),
-  Services = client.db("WorkShopDB").collection("Services");
+  Services = client.db("WorkShopDB").collection("Services"),
+  OrderHistory = client.db("WorkShopDB").collection("OrderHistory");
 
-app.use(bodyParser.json());
+app.use(
+  bodyParser.json({
+    verify: function (req, res, buf) {
+      var url = req.originalUrl;
+      if (url.startsWith("/api/webhook")) {
+        req.rawBody = buf.toString();
+      }
+    }
+  })
+);
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieparser());
+
+const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
 
 const s3 = new S3Client({
   region: process.env.S3_BUCKET_REGION,
@@ -36,9 +50,83 @@ const s3 = new S3Client({
   s3ForcePathStyle: true,
   signatureVersion: "v4"
 });
+const DASHBOARD = "http://localhost:3000/dashboard/shop";
+app.post("/dashboard/shop/create-checkout-session", async (req, res) => {
+  const { items } = req.body;
+  const orderId = req.body.orderId;
+  console.log(items, orderId);
+  const session = await stripe.checkout.sessions.create({
+    line_items: items.map((item) => {
+      return {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: item.title,
+            images: [item.src]
+          },
+          unit_amount: (Number(item.price) * 100).toFixed(0)
+        },
+        quantity: item.quantity
+      };
+    }),
+    mode: "payment",
+    payment_intent_data: {
+      metadata: {
+        orderId
+      }
+    },
+    success_url: `${DASHBOARD}?success=true`,
+    cancel_url: `${DASHBOARD}?canceled=true`
+  });
+  res.status(200).send(session.url);
+});
+
+app.post("/api/webhook/", (request, response) => {
+  const sig = request.headers["stripe-signature"];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(request.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    response.status(400).send(`Webhook Error: ${err.message}`);
+    return;
+  }
+  switch (event.type) {
+    case "payment_intent.succeeded":
+      const paymentIntentSucceeded = event.data.object;
+      const successfullOrderId = paymentIntentSucceeded.metadata.orderId;
+
+      OrderHistory.updateOne(
+        { _id: new ObjectId(successfullOrderId) },
+        {
+          $set: {
+            status: "Received payment"
+          }
+        }
+      );
+
+      break;
+    case "payment_intent.payment_failed":
+      const paymentIntentFailed = event.data.object;
+      const failedOrderId = paymentIntentFailed.metadata.orderId;
+      OrderHistory.updateOne(
+        { _id: new ObjectId(failedOrderId) },
+        {
+          $set: {
+            status: "Payment failed"
+          }
+        }
+      );
+      break;
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+  response.status(200).send("");
+});
 
 app.post("/addUser", async (req, res) => {
-  const { email, first_name, last_name, password } = req.body;
+  const { email, firstName, lastName, password } = req.body;
   console.log(password);
   let encryptedPassword = null;
   encryptedPassword = await bcrypt.hash(password, 10);
@@ -55,9 +143,10 @@ app.post("/addUser", async (req, res) => {
     if (!user) {
       Users.insertOne({
         Email: email,
-        FirstName: first_name,
-        LastName: last_name,
-        Password: encryptedPassword
+        FirstName: firstName,
+        LastName: lastName,
+        Password: encryptedPassword,
+        Admin: false
       });
       return res.status(201).send("User created successfully");
     }
@@ -65,32 +154,51 @@ app.post("/addUser", async (req, res) => {
 });
 
 app.post("/loginUser", async (request, response) => {
-  // Check if email exists
   const { email, password } = request.body;
   console.log(request.body);
   try {
     const user = await Users.findOne({ Email: email });
-    const passwordCheck = await bcrypt.compare(password, user.Password);
+    if (user) {
+      const passwordCheck = await bcrypt.compare(password, user.Password);
+      if (!passwordCheck) {
+        return response.status(400).send("Wrong email of password! Try again");
+      }
+      const token = jwt.sign(
+        {
+          userId: user._id,
+          userEmail: user.Email,
+          admin: user.Admin
+        },
+        "accessToken",
+        { expiresIn: "10m" }
+      );
 
-    if (!passwordCheck) {
-      return response.status(400).send({
-        message: "Passwords does not match"
+      const refreshToken = jwt.sign(
+        {
+          userId: user._id,
+          userEmail: user.Email,
+          admin: user.Admin
+        },
+        "refreshToken",
+        { expiresIn: "1d" }
+      );
+
+      response.cookie("jwt", refreshToken, {
+        httpOnly: true,
+        sameSite: "None",
+        secure: true,
+        maxAge: 1000 * 60 * 60
       });
+      response.status(200).send({
+        message: "Login Successful",
+        email: user.Email,
+        admin: user.Admin,
+        token,
+        userId: user._id
+      });
+    } else {
+      return response.status(400).send("Wrong email of password! Try again");
     }
-    const token = jwt.sign(
-      {
-        userId: user._id,
-        userEmail: user.email
-      },
-      "RANDOM-TOKEN",
-      { expiresIn: "10s" }
-    );
-    response.status(200).send({
-      message: "Login Successful",
-      email: user.email,
-      token,
-      userId: user._id
-    });
   } catch (err) {
     console.log(err);
     response.status(500).send({
@@ -98,8 +206,49 @@ app.post("/loginUser", async (request, response) => {
     });
   }
 });
-app.post("/dashboard/cars", async (req, res) => {
-  const { token } = req.body;
+
+app.post("/refresh", (req, res) => {
+  if (req.cookies?.jwt) {
+    const refreshToken = req.cookies.jwt;
+
+    jwt.verify(refreshToken, "refreshToken", (err) => {
+      const decoded = jwt.decode(refreshToken);
+      const userId = decoded?.userId;
+      const userEmail = decoded?.userEmail;
+      const admin = decoded?.admin;
+      if (err) {
+        return res.status(401).send("Unauthorized");
+      } else {
+        const accessToken = jwt.sign(
+          {
+            userId: userId,
+            userEmail: userEmail,
+            admin: admin
+          },
+          "accessToken",
+          {
+            expiresIn: "10m"
+          }
+        );
+        const userData = {
+          accessToken: accessToken,
+          admin: admin
+        };
+        return res.status(200).send(userData);
+      }
+    });
+  } else {
+    return res.status(401).send("Unauthorized");
+  }
+});
+
+app.get("/logout", async (req, res) => {
+  res.clearCookie("jwt");
+  return res.status(200).send("Successfully logged out");
+});
+
+app.get("/dashboard/cars", async (req, res) => {
+  const token = req.cookies.jwt;
   if (token != null) {
     const decoded = jwt.decode(token);
     const userId = decoded.userId;
@@ -142,7 +291,8 @@ app.get("/dashboard/newOffers", async (req, res) => {
 });
 
 app.post("/dashboard/cars/addcar", async (req, res) => {
-  const { carBrand, carModel, engine, hp, mileage, vin, year, token } = req.body;
+  const { carBrand, carModel, engine, hp, mileage, vin, year } = req.body;
+  const token = req.cookies.jwt;
   if (token != null) {
     const decoded = jwt.decode(token);
     const userId = decoded.userId;
@@ -184,7 +334,8 @@ app.post("/dashboard/cars/addcar", async (req, res) => {
   }
 });
 app.post("/dashboard/cars/edit", async (req, res) => {
-  const { carBrand, carModel, engine, hp, mileage, vin, year, token, carId } = req.body;
+  const { carBrand, carModel, engine, hp, mileage, vin, year, carId } = req.body;
+  const token = req.cookies.jwt;
   if (token != null) {
     Cars.updateOne(
       { _id: new ObjectId(carId) },
@@ -224,8 +375,9 @@ app.post("/dashboard/cars/delete", async (req, res) => {
   });
 });
 
-app.post("/dashboard/profile", async (req, res) => {
-  const { token } = req.body;
+app.get("/dashboard/profile", async (req, res) => {
+  const token = req.cookies.jwt;
+  console.log(token);
   if (token != null) {
     const decoded = jwt.decode(token);
     const userId = decoded.userId;
@@ -253,9 +405,9 @@ app.post("/dashboard/profile/edit", async (req, res) => {
     phoneNumber,
     stateProvince,
     zipPostal,
-    street,
-    token
+    street
   } = req.body;
+  const token = req.cookies.jwt;
   if (token != null) {
     const decoded = jwt.decode(token);
     const userId = decoded.userId;
@@ -285,15 +437,20 @@ app.post("/dashboard/profile/edit", async (req, res) => {
 });
 
 app.get("/dashboard/appointments", async (req, res) => {
-  Appointments.find().toArray((err, appointment) => {
-    if (err) {
-      return res.status(500).send("Error");
-    }
+  const token = req.cookies.jwt;
+  if (token != null) {
+    const decoded = jwt.decode(token);
+    const userId = decoded.userId;
+    Appointments.find({ userId: userId }).toArray((err, appointment) => {
+      if (err) {
+        return res.status(500).send("Error");
+      }
 
-    if (appointment) {
-      return res.status(201).send(appointment);
-    }
-  });
+      if (appointment) {
+        return res.status(201).send(appointment);
+      }
+    });
+  }
 });
 
 app.get("/dashboard/shop/carshopitems", async (req, res) => {
@@ -309,8 +466,8 @@ app.get("/dashboard/shop/carshopitems", async (req, res) => {
 });
 
 app.post("/dashboard/appointment/add", async (req, res) => {
-  const { token, carId, date, hours, phone, car, repairCategory, description, status, client } =
-    req.body;
+  const { carId, date, hours, phone, car, repairCategory, description, status, client } = req.body;
+  const token = req.cookies.jwt;
   if (token != null) {
     const decoded = jwt.decode(token);
     const userId = decoded.userId;
@@ -479,6 +636,25 @@ app.post("/dashboard/admin/appointments/delete", async (req, res) => {
   });
 });
 
+app.get("/dashboard/services", async (req, res) => {
+  const token = req.cookies.jwt;
+  console.log(token);
+  if (token != null) {
+    const decoded = jwt.decode(token);
+    const clientId = decoded.userId;
+    console.log(clientId);
+    Services.find({ clientId: clientId }).toArray((err, service) => {
+      if (err) {
+        return res.status(500).send("Error");
+      }
+
+      if (service) {
+        return res.status(200).send(service);
+      }
+    });
+  }
+});
+
 app.get("/dashboard/admin/services", async (req, res) => {
   Services.find().toArray((err, service) => {
     if (err) {
@@ -492,16 +668,20 @@ app.get("/dashboard/admin/services", async (req, res) => {
 });
 
 app.post("/dashboard/admin/services/add", async (req, res) => {
-  const { date, client, car, repairPrice, partsPrice, vin } = req.body;
+  const { partsPrice, repairPrice, date, clientId, firstName, lastName, car, vin, parts } =
+    req.body;
 
   Services.insertOne(
     {
-      date: date,
-      client: client,
-      car: car,
-      repairPrice: repairPrice,
       partsPrice: partsPrice,
-      vin: vin
+      repairPrice: repairPrice,
+      date: date,
+      clientId: clientId,
+      firstName: firstName,
+      lastName: lastName,
+      car: car,
+      vin: vin,
+      parts: parts
     },
     (err, service) => {
       if (err) {
@@ -800,6 +980,100 @@ app.post("/dashboard/admin/warehouse/carshopitems/delete", async (req, res) => {
       }
     });
   }
+});
+const date = new Date();
+const day = date.getDay();
+const month = date.getMonth() + 1;
+const year = date.getFullYear();
+app.post("/dashboard/shop/createorder", async (req, res) => {
+  const { items } = req.body;
+
+  const token = req.cookies.jwt;
+  const totalPrice = req.body.totalPrice;
+  if (token != null) {
+    const decoded = jwt.decode(token);
+    const userId = decoded.userId;
+    OrderHistory.insertOne(
+      {
+        userId: userId,
+        status: "Pending",
+        created: day + "." + month + "." + year,
+        totalPrice: totalPrice,
+        items: { items }
+      },
+      (err, order) => {
+        if (err) {
+          return res.status(500).send("Error");
+        }
+
+        if (order) {
+          return res.status(201).send(order.insertedId);
+        }
+      }
+    );
+  }
+});
+
+app.get("/dashboard/orderhistory", async (req, res) => {
+  const token = req.cookies.jwt;
+  console.log(token);
+  if (token != null) {
+    const decoded = jwt.decode(token);
+    const userId = decoded.userId;
+
+    OrderHistory.find({ userId: userId }).toArray((err, item) => {
+      if (err) {
+        return res.status(500).send("Error");
+      }
+
+      if (item) {
+        return res.status(200).send(item);
+      }
+    });
+  }
+});
+
+app.get("/dashboard/admin/recentpurchases", async (req, res) => {
+  OrderHistory.find().toArray((err, item) => {
+    if (err) {
+      return res.status(500).send("Error");
+    }
+
+    if (item) {
+      return res.status(200).send(item);
+    }
+  });
+});
+
+app.get("/dashboard/admin/users", async (req, res) => {
+  Users.find({ Admin: false }).toArray((err, user) => {
+    if (err) {
+      return res.status(500).send("Error");
+    }
+
+    if (user) {
+      return res.status(200).send(user);
+    }
+  });
+});
+
+app.post("/dashboard/admin/recentpurchases/edit", async (req, res) => {
+  const { orderId, status } = req.body;
+  console.log(orderId);
+  OrderHistory.updateOne(
+    { _id: new ObjectId(orderId) },
+    {
+      $set: {
+        status: status
+      }
+    },
+    function (err, result) {
+      if (err) throw err;
+      if (result) {
+        return res.status(200).send("Order edited successfully!");
+      }
+    }
+  );
 });
 
 const PORT = process.env.API_PORT;
