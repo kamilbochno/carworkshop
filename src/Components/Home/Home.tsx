@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 import Navbar from "../Navbar/Navbar.tsx";
 import Footer from "../Footer/Footer.tsx";
 import logo from "./logo.svg";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Routes, Route } from "react-router-dom";
 import bgVideo from "../../Videos/production ID_4489804.mp4";
 import {
@@ -18,6 +18,8 @@ import { Switch } from "@headlessui/react";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import team1 from "../../Images/team1.jpg";
+import { Toaster } from "react-hot-toast";
+import AuthContext from "../context/AuthProvider.tsx";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -25,6 +27,8 @@ function classNames(...classes) {
 
 function App() {
   const [agreed, setAgreed] = useState(false);
+
+  const { isAuthenticated } = useContext<any>(AuthContext);
 
   const services = [
     {
@@ -138,9 +142,9 @@ function App() {
       img: team1
     }
   ];
-  const toTop = document.getElementById("toTopButton");
 
   window.onscroll = function () {
+    const toTop = document.getElementById("toTopButton");
     if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
       toTop.classList.remove("hidden");
     } else {
@@ -150,9 +154,20 @@ function App() {
   function goToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
+  useEffect(() => {
+    isAuthenticated();
+  }, []);
   return (
     <div>
       <Navbar />
+      <Toaster
+        position="bottom-right"
+        reverseOrder={false}
+        gutter={8}
+        toastOptions={{
+          duration: 3000
+        }}
+      />
       <main>
         <div id="top">
           <div
