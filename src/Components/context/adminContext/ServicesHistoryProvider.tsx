@@ -11,6 +11,10 @@ export const AdminServicesHistoryProvider = ({ children }) => {
   const [isOpenEditService, setIsOpenEditService] = useState(false);
   const [isOpenDeleteService, setIsOpenDeleteService] = useState(false);
   const [isOpenDetailsService, setIsOpenDetailsService] = useState(false);
+  const [isOpenAddPartService, setIsOpenAddPartService] = useState(false);
+
+  const [serviceParts, setServiceParts] = useState<any>([]);
+  const [users, setUsers] = useState<any>([]);
 
   const [service, setService] = useState<any>([]);
   const [services, setServices] = useState<any>([]);
@@ -20,6 +24,12 @@ export const AdminServicesHistoryProvider = ({ children }) => {
       let servicesData = response.data;
       setServices(servicesData);
       setIsLoading(false);
+    });
+  };
+  const getUsers = () => {
+    axios.get("/dashboard/admin/users").then((response) => {
+      let usersData = response.data;
+      setUsers(usersData);
     });
   };
   return (
@@ -37,7 +47,13 @@ export const AdminServicesHistoryProvider = ({ children }) => {
         setService,
         services,
         setServices,
-        getServices
+        getServices,
+        serviceParts,
+        setServiceParts,
+        isOpenAddPartService,
+        setIsOpenAddPartService,
+        getUsers,
+        users
       }}>
       {children}
     </AdminServicesHistoryContext.Provider>

@@ -9,6 +9,7 @@ export const OrderHistoryProvider = ({ children }) => {
   const { setIsLoading } = useContext<any>(LoadingContext);
   const [isOpenDetailsOrder, setIsOpenDetailsOrder] = useState(false);
   const [isOpenDetailsPurchase, setIsOpenDetailsPurchase] = useState(false);
+  const [isOpenEditPurchase, setIsOpenEditPurchase] = useState(false);
 
   const [order, setOrder] = useState<any>([]);
   const [orders, setOrders] = useState<any>([]);
@@ -48,7 +49,9 @@ export const OrderHistoryProvider = ({ children }) => {
         setPurchases,
         getRecentPurchases,
         isOpenDetailsPurchase,
-        setIsOpenDetailsPurchase
+        setIsOpenDetailsPurchase,
+        isOpenEditPurchase,
+        setIsOpenEditPurchase
       }}>
       {children}
     </OrderHistoryContext.Provider>

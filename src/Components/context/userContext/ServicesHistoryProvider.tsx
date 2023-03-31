@@ -13,7 +13,7 @@ export const ServicesHistoryProvider = ({ children }) => {
   const [services, setServices] = useState<any>([]);
   const getServices = () => {
     setIsLoading(true);
-    axios.get("/dashboard/admin/services").then((response) => {
+    axios.get("/dashboard/services").then((response) => {
       let servicesData = response.data;
       console.log(response.data);
       setServices(servicesData);

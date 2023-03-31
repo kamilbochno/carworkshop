@@ -10,8 +10,7 @@ export const UserProvider = ({ children }) => {
   const [profileInfo, setProfileInfo] = useState<any>([]);
   const getUserProfile = () => {
     setIsLoading(true);
-    const token = { token: localStorage.getItem("token") };
-    axios.post("/dashboard/profile", token).then((response) => {
+    axios.get("/dashboard/profile").then((response) => {
       const data = response.data[0];
       setProfileInfo(data);
       setIsLoading(false);

@@ -26,8 +26,7 @@ export const UserCarsProvider = ({ children }) => {
   const [cars, setCars] = useState<any>([]);
   const getCars = () => {
     setIsLoading(true);
-    const token = { token: localStorage.getItem("token") };
-    axios.post("/dashboard/cars", token).then((response) => {
+    axios.get("/dashboard/cars").then((response) => {
       setCars(response.data);
       setIsLoading(false);
     });
