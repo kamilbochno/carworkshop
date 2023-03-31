@@ -57,12 +57,19 @@ export default function ShoppingCart() {
     }
   };
 
-  const setCheckout = () => {
-    const items = {
-      items: userCartItems
+  const setCheckout = async () => {
+    let items = {
+      items: userCartItems,
+      orderId: "",
+      totalPrice: subtotal
     };
+    let orderId = "";
     setIsLoading(true);
-    axios.post("/dashboard/shop/create-checkout-session", items).then((response) => {
+    await axios.post("/dashboard/shop/createorder", items).then((response) => {
+      orderId = response.data;
+    });
+    items = { ...items, orderId: orderId, totalPrice: subtotal };
+    await axios.post("/dashboard/shop/create-checkout-session", items).then((response) => {
       window.location = response.data;
       setIsLoading(false);
     });
