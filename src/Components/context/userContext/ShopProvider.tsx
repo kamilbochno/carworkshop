@@ -49,6 +49,18 @@ export const ShopProvider = ({ children }) => {
     });
   };
 
+  const setCart = () => {
+    const cart = userCartItems;
+    axios.post("/dashboard/shop/savecart", cart).then((response) => {});
+  };
+
+  const getCart = () => {
+    axios.post("/dashboard/shop/getcart").then((response) => {
+      setUserCartItems(response.data);
+      setItemsInCart(response.data.length);
+    });
+  };
+
   const handleSelectCarShopItemsCategory = (event) => {
     const newData = carShopItems.filter((item) => item.category.includes(event.target.value));
     setCarShopItemsCategory(event.target.value);
@@ -105,7 +117,9 @@ export const ShopProvider = ({ children }) => {
         setItemAvailable,
         estimateTotalPrice,
         increaseQuantity,
-        decreaseQuantity
+        decreaseQuantity,
+        setCart,
+        getCart
       }}>
       {children}
     </ShopContext.Provider>

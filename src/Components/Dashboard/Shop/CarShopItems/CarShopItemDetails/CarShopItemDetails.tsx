@@ -23,7 +23,6 @@ function CarShopItemDetails() {
   const addToCart = () => {
     let checkItemsInCart = userCartItems.filter((item) => item.id === carShopItem._id);
     if (checkItemsInCart.length === 0) {
-      localStorage.getItem("token");
       setUserCartItems([
         ...userCartItems,
         {
@@ -38,7 +37,6 @@ function CarShopItemDetails() {
         }
       ]);
       setItemsInCart(itemsInCart + 1);
-      localStorage.setItem("cart", JSON.stringify(userCartItems));
       setIsOpenCarShopItemDetails(false);
       toast.success("Successfully added item to cart!");
     } else {

@@ -28,7 +28,10 @@ function Shop() {
     userCartItems,
     setUserCartItems,
     setItemsInCart,
-    estimateTotalPrice
+    itemsInCart,
+    estimateTotalPrice,
+    setCart,
+    getCart
   } = useContext<any>(ShopContext);
   const [pages, setPages] = useState(10);
   useEffect(() => {
@@ -36,22 +39,12 @@ function Shop() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(userCartItems));
+    setCart();
     estimateTotalPrice();
   }, [userCartItems]);
 
   useEffect(() => {
-    let localCart = JSON.parse(localStorage.getItem("cart")!);
-    if (localCart.length > 0) {
-      const time = localCart[localCart.length - 1].timeWhenAdded;
-      const expirationTime = time + 10000;
-      if (Date.now() > expirationTime) {
-        localStorage.setItem("cart", JSON.stringify([]));
-      } else {
-        setUserCartItems(localCart);
-        setItemsInCart(localCart.length);
-      }
-    }
+    getCart();
   }, []);
 
   function setCarShopProducts(e) {
