@@ -5,30 +5,16 @@ import AuthContext from "../context/AuthProvider.tsx";
 import { useContext } from "react";
 import { useNavigate } from "react-router";
 import logo from "../../Icons/mdi_car-wrench.svg";
-import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
-import axios from "axios";
-import {
-  ArrowPathIcon,
-  Bars3Icon,
-  ChartPieIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
-  SquaresPlusIcon,
-  XMarkIcon
-} from "@heroicons/react/24/outline";
-import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
+import { Dialog } from "@headlessui/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 const Navbar = () => {
-  const navigate = useNavigate();
   const { auth, admin, isAuthenticated, logout } = useContext<any>(AuthContext);
-
+  const navigate = useNavigate();
   useEffect(() => {
     isAuthenticated();
   }, [auth]);
 
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-  }
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <section className="navigation bg-gray-300">
@@ -100,44 +86,49 @@ const Navbar = () => {
                       Contact
                     </a>
                   </div>
-                  <div>
-                    {!auth && (
-                      <>
-                        <li>
-                          <a
-                            className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                            href="/login">
-                            Sign in
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                            href="/register">
-                            Sign up
-                          </a>
-                        </li>
-                      </>
-                    )}
-                    {auth && (
-                      <>
-                        <li className="list-none">
-                          <a
-                            className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                            href="/dashboard/">
-                            Dashboard
-                          </a>
-                        </li>
-                        <li className="list-none" onClick={logout}>
-                          <a
-                            href=""
-                            className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
-                            Logout
-                          </a>
-                        </li>
-                      </>
-                    )}
-                  </div>
+
+                  {!auth && (
+                    <div className="space-y-2 py-6 w-full">
+                      <button
+                        className="w-full block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                        onClick={() => navigate("/login")}>
+                        <p>Sign in</p>
+                      </button>
+                      <button
+                        className="w-full block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                        onClick={() => navigate("/register")}>
+                        <p>Sign up</p>
+                      </button>
+                    </div>
+                  )}
+                  {auth && admin && (
+                    <div className="space-y-2 py-6 w-full">
+                      <button
+                        className="w-full block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                        onClick={() => navigate("/dashboard/admin/")}>
+                        <p>Dashboard</p>
+                      </button>
+                      <button
+                        className="w-full block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                        onClick={() => logout()}>
+                        <p>Logout</p>
+                      </button>
+                    </div>
+                  )}
+                  {auth && !admin && (
+                    <div className="space-y-2 py-6 w-full">
+                      <button
+                        className="w-full block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                        onClick={() => navigate("/dashboard/")}>
+                        <p>Dashboard</p>
+                      </button>
+                      <button
+                        className="w-full block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                        onClick={() => logout()}>
+                        <p>Logout</p>
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </Dialog.Panel>

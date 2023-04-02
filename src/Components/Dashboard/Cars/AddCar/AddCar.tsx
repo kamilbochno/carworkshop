@@ -63,8 +63,8 @@ function AddCar() {
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 backdrop-brightness-50 backdrop-blur-sm z-0 h-full w-full">
       <div className="justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none">
-        <div className="w-auto my-6 mx-auto max-w-3xl">
-          <div className=" h-100 border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+        <div className="mt-24 mx-auto max-w-lg">
+          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="flex items-center justify-between p-6 border-b border-solid border-gray-300 rounded-t ">
               <h3 className="text-3xl font=semibold mx-auto">Add car to your account</h3>
               <button
@@ -297,7 +297,7 @@ function AddCar() {
                   </div>
                   <div className="flex justify-center items-center mt-6 col-span-2">
                     <button
-                      className="text-white bg-blue-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded-lg shadow hover:shadow-lg hover:bg-blue-600 outline-none focus:outline-none mr-1 mb-1"
+                      className="text-white bg-blue-500 active:bg-yellow-700 font-bold text-sm px-6 py-3 rounded-lg shadow hover:shadow-lg hover:bg-blue-600 outline-none focus:outline-none mr-1 mb-1"
                       type="submit">
                       Submit
                     </button>

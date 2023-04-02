@@ -72,7 +72,7 @@ function AdminDashboard() {
                 <ServicesHistory />
               </div>
             </div>
-            <div className="bg-white h-100 rounded-lg border-2 border-solid border-gray-300">
+            <div className="bg-white h-100 rounded-lg border-2 border-solid border-gray-300 overflow-x-auto overflow-y-hidden">
               <div className="mt-4 text-2xl tracking-tight text-gray-600 text-center">
                 Employees overview
               </div>
@@ -88,7 +88,7 @@ function AdminDashboard() {
               </button>
             </div>
           </div>
-          <div className="bg-white h-100 rounded-lg border-2 border-solid border-gray-300 mt-16">
+          <div className="bg-white h-100 rounded-lg border-2 border-solid border-gray-300 mt-16 overflow-x-auto overflow-y-hidden">
             <div className="mt-4 text-2xl tracking-tight text-gray-600 text-center">
               Appointments
             </div>
@@ -97,8 +97,8 @@ function AdminDashboard() {
           <div className="mt-6 max-w-7xl py-2">
             <div className="text-xl tracking-tight text-gray-600">Car shop</div>
           </div>
-          <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-4 gap-y-8 mt-6 h-96">
-            <div className="col-span-2 bg-white rounded-lg border-2 border-solid border-gray-300">
+          <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-4 gap-y-8 mt-6 h-96 ">
+            <div className="col-span-2 bg-white rounded-lg border-2 border-solid border-gray-300 overflow-x-auto overflow-y-hidden">
               <div className="mt-4 text-2xl tracking-tight text-gray-600 text-center">
                 Recent Purchases
               </div>

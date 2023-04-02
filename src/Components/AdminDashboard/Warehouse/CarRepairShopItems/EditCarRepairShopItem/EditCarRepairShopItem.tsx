@@ -86,7 +86,7 @@ function CarRepairShopItemEdit() {
   if (!isOpenCarRepairShopItemEdit) return null;
 
   return (
-    <div className="fixed top-0 left-0 backdrop-brightness-50 z-10 h-full w-full">
+    <div className="fixed top-0 left-0 backdrop-brightness-50 backdrop-blur-sm z-10 h-full w-full">
       <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-2 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -166,7 +166,7 @@ function CarRepairShopItemEdit() {
                       {...register("price", {
                         required: "Price is required",
                         pattern: {
-                          value: /^[0-9]*$/,
+                          value: /^\d*\.?\d*$/,
                           message: "This input is number only"
                         }
                       })}
@@ -218,7 +218,7 @@ function CarRepairShopItemEdit() {
                   <div>
                     <input
                       type="file"
-                      {...register("image", { required: "Image is required" })}
+                      {...register("image", { required: false })}
                       className="shadow mb-2 appearance-none border rounded w-full py-2 px-1 text-black"
                     />
                     <ErrorMessage
@@ -264,7 +264,7 @@ function CarRepairShopItemEdit() {
                 </div>
                 <div className="flex justify-center items-center mt-6 col-span-2">
                   <button
-                    className="text-white bg-blue-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded-lg shadow hover:shadow-lg hover:bg-blue-600 outline-none focus:outline-none mr-1 mb-1"
+                    className="text-white bg-blue-500 active:bg-yellow-700 font-bold text-sm px-6 py-3 rounded-lg shadow hover:shadow-lg hover:bg-blue-600 outline-none focus:outline-none mr-1 mb-1"
                     type="submit">
                     Submit
                   </button>

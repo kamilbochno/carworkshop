@@ -1,23 +1,14 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 import { useState, useEffect, useContext, Fragment } from "react";
-import { NavLink, Routes, Route, useParams } from "react-router-dom";
-import { Menu, Transition } from "@headlessui/react";
-import axios from "axios";
 import OrderHistoryContext from "../../context/userContext/OrderHistoryProvider.tsx";
 import ReactPaginate from "react-paginate";
 
 function Items({ currentItems }) {
-  const { setIsOpenDetailsOrder, setOrder, order, getOrderHistory } =
-    useContext<any>(OrderHistoryContext);
+  const { getOrderHistory } = useContext<any>(OrderHistoryContext);
 
   useEffect(() => {
     getOrderHistory();
   }, []);
-
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-  }
 
   return (
     <div>

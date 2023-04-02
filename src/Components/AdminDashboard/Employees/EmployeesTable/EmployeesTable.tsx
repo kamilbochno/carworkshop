@@ -46,7 +46,7 @@ function EmployeesTable() {
 
   return (
     <main>
-      <div className="bg-gray-100 h-screen mx-auto py-6 sm:px-6 lg:px-8">
+      <div className="bg-gray-100 lg:h-screen mx-auto py-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 border-b-2 border-gray-300">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">Employees</h1>
         </div>
@@ -56,7 +56,7 @@ function EmployeesTable() {
             className="bg-blue-500 hover:bg-blue-600 h-10 w-28 rounded-lg text-white mb-4 text-sm font-semibold ">
             Add employee
           </button>
-          <div className="bg-white rounded-lg border-2 border-solid border-gray-300">
+          <div className="bg-white mb-12 rounded-lg border-2 border-solid border-gray-300 overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50 uppercase">
                 <tr>
@@ -81,7 +81,7 @@ function EmployeesTable() {
                 </tr>
               </thead>
 
-              <tbody id="carTable" className="divide-y divide-gray-200">
+              <tbody id="employeesTable" className="divide-y divide-gray-200">
                 {employees.map((employee, index) => (
                   <tr id={employee._id} key={index}>
                     <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
@@ -150,7 +150,7 @@ function EmployeesTable() {
                                   <button
                                     onClick={() => deleteEmployee(employees[index])}
                                     className={classNames(
-                                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                                      active ? "bg-gray-100 text-red-500" : "text-red-500",
                                       "block px-4 py-2 text-sm w-24 text-red-500 hover:text-red-700"
                                     )}>
                                     Delete

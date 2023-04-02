@@ -49,7 +49,7 @@ function Items({ currentItems }) {
             <tr id={service._id} key={index}>
               <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">{service.date}</td>
               <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                {service.client}
+                {service.firstName + " " + service.lastName}
               </td>
               <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">{service.car}</td>
               <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
@@ -121,7 +121,7 @@ function ServicesHistoryPaginated({ itemsPerPage }) {
 
   return (
     <>
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto h-64">
         <Items currentItems={currentItems} />
       </div>
       <div className="mx-auto text-center mt-4">
@@ -132,6 +132,7 @@ function ServicesHistoryPaginated({ itemsPerPage }) {
           pageClassName="ml-2 mr-2 text-center text-xl font-semibold"
           previousClassName="text-center text-2xl text-blue-600 font-semibold"
           nextClassName="text-center text-2xl text-blue-600 font-semibold"
+          activeClassName="text-blue-500"
           containerClassName="inline-flex "
           pageRangeDisplayed={5}
           pageCount={pageCount}

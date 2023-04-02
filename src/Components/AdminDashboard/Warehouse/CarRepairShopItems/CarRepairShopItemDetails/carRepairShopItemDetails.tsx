@@ -11,7 +11,7 @@ function CarRepairShopItemDetails() {
   if (!isOpenCarRepairShopItemDetails) return null;
 
   return (
-    <div className="fixed top-0 left-0 backdrop-brightness-50 z-10 h-full w-full">
+    <div className="fixed top-0 left-0 backdrop-brightness-50 backdrop-blur-sm z-10 h-full w-full">
       <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-2 border-gray-400 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -46,8 +46,8 @@ function CarRepairShopItemDetails() {
                       alt={carRepairShopItem.title}></img>
                   </div>
                   <div>{carRepairShopItem.title}</div>
-                  <div>{carRepairShopItem.price}</div>
-                  <div>Description: Lorem ipsum dolor met</div>
+                  <div className="text-blue-500">{carRepairShopItem.price}</div>
+                  <div>{carRepairShopItem.description}</div>
                 </div>
               </div>
             </div>

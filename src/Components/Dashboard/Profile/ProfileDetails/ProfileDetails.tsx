@@ -59,7 +59,7 @@ function ProfileDetails() {
       <DashboardNavigation />
       <Spinner />
       <main>
-        <div className="bg-gray-100 mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="bg-gray-100 mx-auto py-6 sm:px-6 lg:px-8 lg:h-screen">
           <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 border-b-2 border-gray-300">
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">Profile details</h1>
           </div>

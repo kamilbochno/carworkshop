@@ -1,7 +1,8 @@
 import React from "react";
 import { createContext, useState } from "react";
-import axios from "axios";
 import { toast } from "react-hot-toast";
+import { Navigate } from "react-router";
+import axios from "axios";
 
 const AuthContext = createContext({});
 
@@ -20,6 +21,11 @@ export const AuthProvider = ({ children }) => {
         setAuth(true);
       } else {
         setAuth(false);
+        <Navigate to="/" />;
+      }
+      if (response.status === 401) {
+        setAuth(false);
+        <Navigate to="/" />;
       }
     });
   };

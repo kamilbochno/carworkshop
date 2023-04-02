@@ -74,7 +74,7 @@ function Items({ currentItems }) {
         </thead>
 
         <tbody id="appointmentsTable" className="divide-y divide-gray-200">
-          {appointments.map((appointment, index) => (
+          {currentItems.map((appointment, index) => (
             <tr id={appointment._id} key={index}>
               <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
                 {appointment.date}
@@ -145,7 +145,7 @@ function Items({ currentItems }) {
                             <button
                               onClick={() => deleteAppointment(appointments[index])}
                               className={classNames(
-                                active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                                active ? "bg-gray-100 text-red-500" : "text-red-500",
                                 "block px-4 py-2 text-sm w-24 text-red-500 hover:text-red-700"
                               )}>
                               Delete
@@ -184,10 +184,10 @@ function AppointmentsPaginated({ itemsPerPage }) {
 
   return (
     <>
-      <div className="mx-auto">
+      <div className="mx-auto h-96">
         <Items currentItems={currentItems} />
       </div>
-      <div className="mx-auto text-center">
+      <div className="mx-auto text-center mt-16">
         <ReactPaginate
           breakLabel="..."
           nextLabel=">"
@@ -195,6 +195,7 @@ function AppointmentsPaginated({ itemsPerPage }) {
           pageClassName="ml-2 mr-2 text-center text-xl font-semibold"
           previousClassName="text-center text-2xl text-blue-600 font-semibold"
           nextClassName="text-center text-2xl text-blue-600 font-semibold"
+          activeClassName="text-blue-500"
           containerClassName="inline-flex "
           pageRangeDisplayed={5}
           pageCount={pageCount}

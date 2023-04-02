@@ -26,11 +26,6 @@ function Items({ currentItems }) {
     setIsOpenDetailsService(true);
   }
 
-  function editService(serviceInfo) {
-    setService(serviceInfo);
-    setIsOpenEditService(true);
-  }
-
   function deleteService(serviceInfo) {
     setService(serviceInfo);
     setIsOpenDeleteService(true);
@@ -60,12 +55,12 @@ function Items({ currentItems }) {
           </tr>
         </thead>
 
-        <tbody id="servicesTable" className="divide-y divide-gray-200">
+        <tbody id="servicesTable" className="divide-y divide-gray-200 ">
           {currentItems.map((service, index) => (
             <tr id={service._id} key={index}>
               <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">{service.date}</td>
               <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                {service.client}
+                {service.firstName + " " + service.lastName}
               </td>
               <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">{service.car}</td>
               <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
@@ -96,7 +91,7 @@ function Items({ currentItems }) {
                         <Menu.Item>
                           {({ active }) => (
                             <button
-                              onClick={() => serviceDetails(services[index])}
+                              onClick={() => serviceDetails(currentItems[index])}
                               className={classNames(
                                 active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                                 "block px-4 py-2 text-sm w-24"
@@ -108,21 +103,9 @@ function Items({ currentItems }) {
                         <Menu.Item>
                           {({ active }) => (
                             <button
-                              onClick={() => editService(services[index])}
+                              onClick={() => deleteService(currentItems[index])}
                               className={classNames(
-                                active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                                "block px-4 py-2 text-sm w-24"
-                              )}>
-                              Edit
-                            </button>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <button
-                              onClick={() => deleteService(services[index])}
-                              className={classNames(
-                                active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                                active ? "bg-gray-100 text-red-500" : "text-red-500",
                                 "block px-4 py-2 text-sm w-24 text-red-500 hover:text-red-700"
                               )}>
                               Delete
@@ -161,10 +144,10 @@ function ServicesHistoryPaginated({ itemsPerPage }) {
 
   return (
     <>
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto h-80">
         <Items currentItems={currentItems} />
       </div>
-      <div className="mx-auto text-center mt-60">
+      <div className="mx-auto text-center mt-9">
         <ReactPaginate
           breakLabel="..."
           nextLabel=">"
@@ -172,6 +155,7 @@ function ServicesHistoryPaginated({ itemsPerPage }) {
           pageClassName="ml-2 mr-2 text-center text-xl font-semibold"
           previousClassName="text-center text-2xl text-blue-600 font-semibold"
           nextClassName="text-center text-2xl text-blue-600 font-semibold"
+          activeClassName="text-blue-500"
           containerClassName="inline-flex "
           pageRangeDisplayed={5}
           pageCount={pageCount}

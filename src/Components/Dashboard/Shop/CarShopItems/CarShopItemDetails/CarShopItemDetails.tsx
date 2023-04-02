@@ -46,7 +46,7 @@ function CarShopItemDetails() {
   if (!isOpenCarShopItemDetails) return null;
 
   return (
-    <div className="fixed top-0 left-0 backdrop-brightness-50 z-10 h-full w-full">
+    <div className="fixed top-0 left-0 backdrop-brightness-50 backdrop-blur-sm z-10 h-full w-full">
       <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-2 border-gray-400 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -81,24 +81,24 @@ function CarShopItemDetails() {
                   <div className="text-blue-600 mt-2">{carShopItem.price}</div>
                   <div>{carShopItem.description}</div>
                   {carShopItem.quantity !== "0" && carShopItem.quantity !== undefined ? (
-                    <div className="grid grid-cols-2 mx-auto w-48 mt-4">
-                      <div className="mx-auto">
+                    <div className="grid grid-cols-2 mx-auto w-56 mt-4">
+                      <div className="h-8">
                         <button
                           onClick={() => decreaseQuantity()}
                           disabled={quantity === 1}
-                          className="bg-blue-500 hover:bg-blue-600 h-6 w-6 rounded-full text-white">
+                          className="bg-blue-500 hover:bg-blue-600 h-6 w-6 rounded-full text-white mr-2">
                           <MinusIcon className="w-6 h-6" />
                         </button>
                         <input
                           defaultValue={quantity}
                           value={quantity}
                           name="quantity"
-                          className="shadow appearance-none border rounded w-12 h-6 text-black"
+                          className="shadow appearance-none border rounded w-12 text-black"
                         />
                         <button
                           onClick={() => increaseQuantity()}
                           disabled={carShopItem.quantity === String(quantity)}
-                          className="bg-blue-500 hover:bg-blue-600 h-6 w-6 rounded-full text-white">
+                          className="bg-blue-500 hover:bg-blue-600 h-6 w-6 rounded-full text-white ml-2">
                           <PlusIcon className="w-6 h-6" />
                         </button>
                       </div>

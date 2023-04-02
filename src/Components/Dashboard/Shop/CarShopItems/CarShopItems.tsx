@@ -5,11 +5,11 @@ import ShopContext from "../../../context/userContext/ShopProvider.tsx";
 import { MagnifyingGlassIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 
 function Items({ currentItems }) {
-  const { setIsOpenCarShopItemDetails, setCarShopItem, searchCarShopItems } =
-    useContext<any>(ShopContext);
+  const { setIsOpenCarShopItemDetails, setCarShopItem, setQuantity } = useContext<any>(ShopContext);
 
   function carShopItemDetails(itemInfo) {
     setCarShopItem(itemInfo);
+    setQuantity(1);
     setIsOpenCarShopItemDetails(true);
   }
 
@@ -23,20 +23,19 @@ function Items({ currentItems }) {
             <img
               src={item.src}
               alt={item.title}
-              className="mx-auto h-32 w-32 object-cover object-center group-hover:opacity-75"
+              className="mx-auto mt-2 h-32 w-32 object-cover object-center group-hover:opacity-75"
             />
             <h3 className="mt-4 text-sm font-semibold text-gray-700">{item.title}</h3>
-            <p className="mt-1 text-lg font-medium text-blue-600">{item.price}</p>
+            <p className="mt-1 text-lg font-medium text-blue-600">${item.price}</p>
           </div>
-          <div className="grid lg:grid-cols-2 max-w-sm mx-auto">
-            <button
-              onClick={() => carShopItemDetails(searchCarShopItems[index])}
-              className="mx-auto bg-blue-500 hover:bg-blue-600 mb-2 h-8 w-20 rounded-full text-white">
-              Details
-            </button>
-            <button className="mx-auto bg-blue-500 hover:bg-blue-600 mb-2 h-8 w-8 rounded-full text-white">
-              <ShoppingCartIcon className="w-8 h-6" />
-            </button>
+          <div className="mx-auto w-40 mt-2">
+            <div className="">
+              <button
+                onClick={() => carShopItemDetails(currentItems[index])}
+                className="bg-blue-500 hover:bg-blue-600 mb-2 h-8 w-20 rounded-full text-white">
+                Details
+              </button>
+            </div>
           </div>
         </div>
       ))}
@@ -91,10 +90,10 @@ function CarShopItemsPaginated({ itemsPerPage }) {
       </div>
       {currentItems.length === 0 ? (
         <div className="mt-32 text-xl tracking-tight text-gray-400 text-center">
-          No data for searched query
+          No results for the searched items
         </div>
       ) : (
-        <div className="max-w-3xl mb-12 mt-8 pl-4 pr-4 grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-8 mx-auto text-center">
+        <div className="max-w-3xl mb-12 mt-8 pl-4 pr-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8 mx-auto text-center">
           <Items currentItems={currentItems} />
         </div>
       )}
@@ -107,6 +106,7 @@ function CarShopItemsPaginated({ itemsPerPage }) {
           pageClassName="ml-2 mr-2 text-center text-xl font-semibold"
           previousClassName="text-center text-2xl text-blue-600 font-semibold"
           nextClassName="text-center text-2xl text-blue-600 font-semibold"
+          activeClassName="text-blue-500"
           containerClassName="inline-flex "
           pageRangeDisplayed={5}
           pageCount={pageCount}

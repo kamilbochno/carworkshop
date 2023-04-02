@@ -51,6 +51,31 @@ const s3 = new S3Client({
   signatureVersion: "v4"
 });
 const DASHBOARD = "http://localhost:3000/dashboard/shop";
+
+app.post("/dashboard/shop/savecart", async (request, response) => {
+  try {
+    response.cookie("cart", request.body, {
+      httpOnly: false,
+      sameSite: "None",
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24
+    });
+    response.status(200).send({
+      cart: request.body
+    });
+  } catch (err) {
+    console.log(err);
+    response.status(500).send({
+      message: "Internal server error"
+    });
+  }
+});
+
+app.post("/dashboard/shop/getcart", (req, res) => {
+  const cart = req.cookies.cart;
+  res.status(200).send(cart);
+});
+
 app.post("/dashboard/shop/create-checkout-session", async (req, res) => {
   const { items } = req.body;
   const orderId = req.body.orderId;
@@ -510,13 +535,13 @@ app.get("/dashboard/admin/employees", async (req, res) => {
 });
 
 app.post("/dashboard/admin/employees/add", async (req, res) => {
-  const { name, surName, phone, role, salary, city, email, stateProvince, street, zipPostal } =
+  const { name, surname, phone, role, salary, city, email, stateProvince, street, zipPostal } =
     req.body;
 
   Employees.insertOne(
     {
       Name: name,
-      Surname: surName,
+      Surname: surname,
       Phone: phone,
       Role: role,
       Salary: salary,

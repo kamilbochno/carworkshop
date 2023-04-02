@@ -36,7 +36,7 @@ function Items({ currentItems }) {
 
   return (
     <div className="mt-4">
-      <table className="w-full divide-y divide-gray-200">
+      <table className="w-full divide-y divide-gray-200 ">
         <thead className="bg-gray-50 uppercase">
           <tr>
             <th scope="col" className="px-6 py-3 text-xs font-bold text-left text-gray-500 ">
@@ -155,7 +155,7 @@ function RecentPurchasesPaginated({ itemsPerPage }) {
 
   return (
     <>
-      <div className="mx-auto">
+      <div className="mx-auto h-64">
         <Items currentItems={currentItems} />
       </div>
       <div className="mx-auto text-center mt-4">
@@ -166,6 +166,7 @@ function RecentPurchasesPaginated({ itemsPerPage }) {
           pageClassName="ml-2 mr-2 text-center text-xl font-semibold"
           previousClassName="text-center text-2xl text-blue-600 font-semibold"
           nextClassName="text-center text-2xl text-blue-600 font-semibold"
+          activeClassName="text-blue-500"
           containerClassName="inline-flex "
           pageRangeDisplayed={5}
           pageCount={pageCount}

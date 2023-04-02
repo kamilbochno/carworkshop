@@ -18,7 +18,7 @@ function Items({ currentItems }) {
 
   return (
     <div>
-      <table className="divide-y divide-gray-200">
+      <table className="divide-y divide-gray-200 w-full">
         <thead className="bg-gray-50 uppercase">
           <tr>
             <th scope="col" className="px-6 py-3 text-xs font-bold text-left text-gray-500 ">

@@ -75,7 +75,7 @@ function AppointmentsPaginated({ itemsPerPage }) {
 
   return (
     <>
-      <div className="max-w-5xl mx-auto">
+      <div className="mx-auto h-52">
         <Items currentItems={currentItems} />
       </div>
       <div className="mx-auto text-center mt-4">
@@ -86,6 +86,7 @@ function AppointmentsPaginated({ itemsPerPage }) {
           pageClassName="ml-2 mr-2 text-center text-xl font-semibold"
           previousClassName="text-center text-2xl text-blue-600 font-semibold"
           nextClassName="text-center text-2xl text-blue-600 font-semibold"
+          activeClassName="text-blue-500"
           containerClassName="inline-flex "
           pageRangeDisplayed={5}
           pageCount={pageCount}

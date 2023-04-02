@@ -10,7 +10,7 @@ function Items({ currentItems }) {
 
   return (
     <>
-      <div className="bg-white rounded-lg mt-16">
+      <div className="bg-white rounded-lg mt-16 overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50 uppercase">
             <tr>
@@ -77,10 +77,10 @@ function EmployeesPaginated({ itemsPerPage }) {
 
   return (
     <>
-      <div className="max-w-5xl mb-12 gap-x-6 gap-y-8 mx-auto">
+      <div className="max-w-5xl mb-12 gap-x-6 gap-y-8 mx-auto h-72">
         <Items currentItems={currentItems} />
       </div>
-      <div className="mx-auto text-center">
+      <div className="mx-auto text-center pt-6">
         <ReactPaginate
           breakLabel="..."
           nextLabel=">"
@@ -88,6 +88,7 @@ function EmployeesPaginated({ itemsPerPage }) {
           pageClassName="ml-2 mr-2 text-center text-xl font-semibold"
           previousClassName="text-center text-2xl text-blue-600 font-semibold"
           nextClassName="text-center text-2xl text-blue-600 font-semibold"
+          activeClassName="text-blue-500"
           containerClassName="inline-flex "
           pageRangeDisplayed={5}
           pageCount={pageCount}

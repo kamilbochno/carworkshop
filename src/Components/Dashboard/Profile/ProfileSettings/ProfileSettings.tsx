@@ -92,7 +92,7 @@ function ProfileDetails() {
       <DashboardNavigation />
       <Spinner />
       <main>
-        <div className="bg-gray-100 mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="bg-gray-100 mx-auto py-6 sm:px-6 lg:px-8 lg:h-screen">
           <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8 border-b-2 border-gray-300">
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">Profile settings</h1>
           </div>
@@ -192,7 +192,7 @@ function ProfileDetails() {
                 <div className="ml-6 text-center">
                   <button
                     type="submit"
-                    className="mt-4 mx-auto text-white uppercase text-center w-24 h-8 bg-blue-500 rounded-lg hover:bg-blue-600 mt-6 mb-4 tracking-tight">
+                    className="mt-4 mx-auto text-white text-center w-24 h-8 bg-blue-500 rounded-lg hover:bg-blue-600 mt-6 mb-4 tracking-tight">
                     Submit
                   </button>
                 </div>

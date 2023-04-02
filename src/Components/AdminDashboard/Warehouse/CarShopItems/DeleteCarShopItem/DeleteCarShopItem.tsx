@@ -31,7 +31,7 @@ function DeleteCarShopItem() {
   }
 
   return (
-    <div className="fixed top-0 left-0 backdrop-brightness-50 z-10 h-full w-full">
+    <div className="fixed top-0 left-0 backdrop-brightness-50 backdrop-blur-sm z-10 h-full w-full">
       <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative rounded-lg w-auto my-6 mx-auto max-w-3xl border-2 border-gray-200">
           <div className="border-0 shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -62,11 +62,11 @@ function DeleteCarShopItem() {
                 <div className="text-center">
                   <button
                     onClick={() => DeleteCarShopItem()}
-                    className="text-white bg-red-600 hover:bg-red-700 active:bg-gray-400 font-bold uppercase text-sm px-6 py-3 border-2 border-gray-500 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1">
+                    className="text-white bg-red-600 hover:bg-red-700 active:bg-gray-400 font-bold text-sm px-6 py-3 border-2 border-gray-500 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1">
                     Yes, i'm sure
                   </button>
                   <button
-                    className="text-black bg-transparent hover:bg-gray-200 active:bg-gray-400 font-bold uppercase text-sm px-6 py-3 border-2 border-gray-500 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                    className="text-black bg-transparent hover:bg-gray-200 active:bg-gray-400 font-bold text-sm px-6 py-3 border-2 border-gray-500 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
                     onClick={() => setIsOpenCarShopItemDelete(false)}
                     type="button">
                     No, cancel

@@ -2,10 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App.js";
-import PageNotFound from "./Components/PageNotFound/PageNotFound.tsx";
-import LoginPage from "./Components/LoginPage/LoginPage.tsx";
-import RegisterPage from "./Components/RegisterPage/RegisterPage.tsx";
-import reportWebVitals from "./reportWebVitals";
 import { AuthProvider } from "./Components/context/AuthProvider.tsx";
 import { UserProvider } from "./Components/context/userContext/UserProvider.tsx";
 import { NewOffersProvider } from "./Components/context/userContext/NewOffersProvider.tsx";
@@ -19,14 +15,7 @@ import { WarehouseProvider } from "./Components/context/adminContext/WarehousePr
 import { ServicesHistoryProvider } from "./Components/context/userContext/ServicesHistoryProvider.tsx";
 import { LoadingProvider } from "./Components/context/LoadingProvider.tsx";
 import { OrderHistoryProvider } from "./Components/context/userContext/OrderHistoryProvider.tsx";
-import {
-  Route,
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider,
-  Routes,
-  BrowserRouter
-} from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -60,8 +49,3 @@ root.render(
     </LoadingProvider>
   </BrowserRouter>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

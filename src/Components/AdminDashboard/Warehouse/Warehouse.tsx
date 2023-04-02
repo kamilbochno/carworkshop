@@ -81,7 +81,7 @@ function Warehouse() {
               </div>
               <div className="pb-4 pt-4 mx-auto max-w-xl">
                 <div className="grid grid-cols-2">
-                  <div className="text-left">
+                  <div className="text-left ml-4">
                     <div className="text-xs text-gray-500 uppercase">Products category</div>
                     <select
                       name="itemsCategory"
@@ -97,7 +97,7 @@ function Warehouse() {
                       ))}
                     </select>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right mr-4">
                     <div className="text-xs text-gray-500 uppercase">Products per page</div>
                     <select
                       onChange={setCarRepairShopProducts}
@@ -129,7 +129,7 @@ function Warehouse() {
               </div>
               <div className="pb-4 pt-4 mx-auto max-w-xl">
                 <div className="grid grid-cols-2">
-                  <div className="text-left">
+                  <div className="text-left ml-4">
                     <div className="text-xs text-gray-500 uppercase">Products category</div>
                     <select
                       onChange={handleSelectCarItemsCategory}
@@ -145,7 +145,7 @@ function Warehouse() {
                       ))}
                     </select>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right mr-4">
                     <div className="text-xs text-gray-500 uppercase">Products per page</div>
                     <select
                       onChange={setCarShopProducts}

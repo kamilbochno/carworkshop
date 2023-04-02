@@ -11,7 +11,7 @@ function CarShopItemDetails() {
   if (!isOpenCarShopItemDetails) return null;
 
   return (
-    <div className="fixed top-0 left-0 backdrop-brightness-50 z-10 h-full w-full">
+    <div className="fixed top-0 left-0 backdrop-brightness-50 backdrop-blur-sm z-10 h-full w-full">
       <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-2 border-gray-400 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -43,7 +43,7 @@ function CarShopItemDetails() {
                     <img className="mx-auto" src={carShopItem.src} alt={carShopItem.title}></img>
                   </div>
                   <div>{carShopItem.title}</div>
-                  <div>{carShopItem.price}</div>
+                  <div className="text-blue-500">{carShopItem.price}</div>
                   <div>{carShopItem.description}</div>
                 </div>
               </div>

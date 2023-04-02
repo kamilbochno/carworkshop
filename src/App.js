@@ -1,9 +1,5 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
-import Navbar from "./Components/Navbar/Navbar.tsx";
-import Footer from "./Components/Footer/Footer.tsx";
-import logo from "./logo.svg";
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { Routes, Route } from "react-router-dom";
 import LoginPage from "./Components/LoginPage/LoginPage.tsx";
 import RegisterPage from "./Components/RegisterPage/RegisterPage.tsx";
