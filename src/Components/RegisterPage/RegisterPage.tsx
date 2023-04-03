@@ -57,7 +57,6 @@ const RegisterPage = () => {
 
   return (
     <div>
-      <Navbar></Navbar>
       <div className="Main">
         <Container>
           <div className="card-container">
@@ -86,6 +85,7 @@ const RegisterPage = () => {
                           </label>
                           <input
                             type="text"
+                            data-testid="firstname-input"
                             {...register("firstName", {
                               required: "First name is required",
                               pattern: {
@@ -98,6 +98,7 @@ const RegisterPage = () => {
                           <ErrorMessage
                             errors={errors}
                             name="firstName"
+                            data-testid="firstname-err-msg"
                             render={({ messages }) =>
                               messages &&
                               Object.entries(messages).map(([type, message]) => (
@@ -114,6 +115,7 @@ const RegisterPage = () => {
                           </label>
                           <input
                             type="text"
+                            data-testid="lastname-input"
                             {...register("lastName", {
                               required: "Last name is required",
                               pattern: {
@@ -126,6 +128,7 @@ const RegisterPage = () => {
                           <ErrorMessage
                             errors={errors}
                             name="lastName"
+                            data-testid="lastname-err-msg"
                             render={({ messages }) =>
                               messages &&
                               Object.entries(messages).map(([type, message]) => (
@@ -142,6 +145,7 @@ const RegisterPage = () => {
                           </label>
                           <input
                             type="text"
+                            data-testid="email-input"
                             {...register("email", {
                               required: "Email is required",
                               pattern: {
@@ -155,6 +159,7 @@ const RegisterPage = () => {
                           <ErrorMessage
                             errors={errors}
                             name="email"
+                            data-testid="email-err-msg"
                             render={({ messages }) =>
                               messages &&
                               Object.entries(messages).map(([type, message]) => (
@@ -171,6 +176,7 @@ const RegisterPage = () => {
                           </label>
                           <input
                             type="password"
+                            data-testid="password-input"
                             {...register("password", {
                               required: "Password is required"
                             })}
@@ -180,6 +186,7 @@ const RegisterPage = () => {
                           <ErrorMessage
                             errors={errors}
                             name="password"
+                            data-testid="password-err-msg"
                             render={({ messages }) =>
                               messages &&
                               Object.entries(messages).map(([type, message]) => (
@@ -196,6 +203,7 @@ const RegisterPage = () => {
                           </label>
                           <input
                             type="password"
+                            data-testid="confirmpassword-input"
                             {...register("confirmPassword", {
                               required: "Confirm password is required",
                               validate: (value: String) => {
@@ -210,6 +218,7 @@ const RegisterPage = () => {
                           <ErrorMessage
                             errors={errors}
                             name="confirmPassword"
+                            data-testid="confirmpassword-err-msg"
                             render={({ messages }) =>
                               messages &&
                               Object.entries(messages).map(([type, message]) => (

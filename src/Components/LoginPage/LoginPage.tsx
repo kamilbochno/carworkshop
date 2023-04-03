@@ -18,7 +18,7 @@ import { toast } from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 
 const LoginPage = () => {
-  const { setAuth, isAuthenticated } = useContext<any>(AuthContext);
+  const { isAuthenticated } = useContext<any>(AuthContext);
   const navigate = useNavigate();
 
   interface IFormInput {
@@ -50,7 +50,6 @@ const LoginPage = () => {
 
   return (
     <div>
-      <Navbar />
       <Toaster
         position="bottom-right"
         reverseOrder={false}
@@ -87,6 +86,7 @@ const LoginPage = () => {
                           </label>
                           <input
                             type="text"
+                            data-testid="email-input"
                             {...register("email", {
                               required: "Email is required",
                               pattern: {
@@ -99,6 +99,7 @@ const LoginPage = () => {
                           />
                           <ErrorMessage
                             errors={errors}
+                            data-testid="error-msg"
                             name="email"
                             render={({ messages }) =>
                               messages &&
@@ -116,6 +117,7 @@ const LoginPage = () => {
                           </label>
                           <input
                             type="password"
+                            data-testid="password-input"
                             {...register("password", {
                               required: "Password is required"
                             })}
@@ -125,6 +127,7 @@ const LoginPage = () => {
                           <ErrorMessage
                             errors={errors}
                             name="password"
+                            data-testid="password-err-msg"
                             render={({ messages }) =>
                               messages &&
                               Object.entries(messages).map(([type, message]) => (

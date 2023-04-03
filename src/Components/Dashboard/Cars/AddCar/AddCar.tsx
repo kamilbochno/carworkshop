@@ -97,6 +97,7 @@ function AddCar() {
                   <div>
                     <select
                       id="carBrand"
+                      data-testid="carBrand-input"
                       {...register("carBrand", { required: "Car brand is required" })}
                       onChange={handleChangeBrand}
                       className="border mb-2 border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -112,6 +113,7 @@ function AddCar() {
                     <ErrorMessage
                       errors={errors}
                       name="carBrand"
+                      data-testid="carBrand-err-msg"
                       render={({ messages }) =>
                         messages &&
                         Object.entries(messages).map(([type, message]) => (
@@ -130,6 +132,7 @@ function AddCar() {
                   <div>
                     <select
                       id="carModel"
+                      data-testid="carModel-input"
                       {...register("carModel", { required: "Car model is required" })}
                       onChange={handleChangeModel}
                       className="border mb-2 border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -143,6 +146,7 @@ function AddCar() {
                     <ErrorMessage
                       errors={errors}
                       name="carModel"
+                      data-testid="carModel-err-msg"
                       render={({ messages }) =>
                         messages &&
                         Object.entries(messages).map(([type, message]) => (
@@ -158,6 +162,7 @@ function AddCar() {
                   </div>
                   <div>
                     <input
+                      data-testid="engine-input"
                       {...register("engine", {
                         required: "Engine is required"
                       })}
@@ -166,6 +171,7 @@ function AddCar() {
                     <ErrorMessage
                       errors={errors}
                       name="engine"
+                      data-testid="engine-err-msg"
                       render={({ messages }) =>
                         messages &&
                         Object.entries(messages).map(([type, message]) => (
@@ -181,6 +187,7 @@ function AddCar() {
                   </div>
                   <div>
                     <input
+                      data-testid="hp-input"
                       {...register("hp", {
                         required: "Hp is required",
                         pattern: {
@@ -210,6 +217,7 @@ function AddCar() {
                   </div>
                   <div>
                     <input
+                      data-testid="year-input"
                       {...register("year", {
                         required: "Year is required",
                         pattern: {
@@ -230,6 +238,7 @@ function AddCar() {
                     <ErrorMessage
                       errors={errors}
                       name="year"
+                      data-testid="year-err-msg"
                       render={({ messages }) =>
                         messages &&
                         Object.entries(messages).map(([type, message]) => (
@@ -245,6 +254,7 @@ function AddCar() {
                   </div>
                   <div>
                     <input
+                      data-testid="mileage-input"
                       {...register("mileage", {
                         required: "Mileage is required",
                         pattern: {
@@ -257,6 +267,7 @@ function AddCar() {
                     <ErrorMessage
                       errors={errors}
                       name="mileage"
+                      data-testid="mileage-err-msg"
                       render={({ messages }) =>
                         messages &&
                         Object.entries(messages).map(([type, message]) => (
@@ -272,6 +283,7 @@ function AddCar() {
                   </div>
                   <div>
                     <input
+                      data-testid="vin-input"
                       {...register("vin", {
                         required: "VIN is required",
                         minLength: {
@@ -285,6 +297,7 @@ function AddCar() {
                     <ErrorMessage
                       errors={errors}
                       name="vin"
+                      data-testid="vin-err-msg"
                       render={({ messages }) =>
                         messages &&
                         Object.entries(messages).map(([type, message]) => (

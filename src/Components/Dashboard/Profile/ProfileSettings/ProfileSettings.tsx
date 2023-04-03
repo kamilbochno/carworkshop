@@ -73,7 +73,7 @@ function ProfileDetails() {
     };
     if (profileData.firstName && profileData.lastName && profileData.email) {
       try {
-        const profile = await axios.post("/dashboard/profile/edit", profileData).then((res) => {
+        await axios.post("/dashboard/profile/edit", profileData).then((res) => {
           if (res.status === 201) {
             getUserProfile();
             navigate("/dashboard/profile");
@@ -115,6 +115,7 @@ function ProfileDetails() {
                     </div>
                     <input
                       name="firstName"
+                      data-testid="firstname-input"
                       defaultValue={profileInfo.FirstName}
                       className="mt-2 pl-2 block mx-auto max-w-lg rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
                   </div>
@@ -124,6 +125,7 @@ function ProfileDetails() {
                     </div>
                     <input
                       name="lastName"
+                      data-testid="lastname-input"
                       defaultValue={profileInfo.LastName}
                       className="mt-2 pl-2 block mx-auto max-w-lg rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
                   </div>
@@ -133,6 +135,7 @@ function ProfileDetails() {
                     </div>
                     <input
                       name="email"
+                      data-testid="email-input"
                       defaultValue={profileInfo.Email}
                       className="mt-2 pl-2 block mx-auto max-w-lg rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
                   </div>
@@ -142,6 +145,7 @@ function ProfileDetails() {
                     </div>
                     <input
                       name="phoneNumber"
+                      data-testid="phoneNumber-input"
                       defaultValue={profileInfo.PhoneNumber}
                       className="mt-2 pl-2 block mx-auto max-w-lg rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
                   </div>
@@ -151,6 +155,7 @@ function ProfileDetails() {
                     </div>
                     <input
                       name="country"
+                      data-testid="country-input"
                       defaultValue={profileInfo.Country}
                       className="mt-2 pl-2 block mx-auto max-w-lg rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
                   </div>
@@ -160,6 +165,7 @@ function ProfileDetails() {
                     </div>
                     <input
                       name="street"
+                      data-testid="street-input"
                       defaultValue={profileInfo.Street}
                       className="mt-2 pl-2 block mx-auto max-w-lg rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
                   </div>
@@ -167,6 +173,7 @@ function ProfileDetails() {
                     <div className="mt-4 text-xl tracking-tight font-semibold text-black">City</div>
                     <input
                       name="city"
+                      data-testid="city-input"
                       defaultValue={profileInfo.City}
                       className="mt-2 pl-2 block mx-auto max-w-lg rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
                   </div>
@@ -176,6 +183,7 @@ function ProfileDetails() {
                     </div>
                     <input
                       name="stateProvince"
+                      data-testid="stateProvince-input"
                       defaultValue={profileInfo.StateProvince}
                       className="mt-2 pl-2 block mx-auto max-w-lg rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
                   </div>
@@ -185,6 +193,7 @@ function ProfileDetails() {
                     </div>
                     <input
                       name="zipPostal"
+                      data-testid="zipPostal-input"
                       defaultValue={profileInfo.ZipPostal}
                       className="mt-2 pl-2 block mx-auto max-w-lg rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
                   </div>

@@ -19,7 +19,7 @@
     "@stripe/stripe-js": "^1.52.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
+    "@testing-library/user-event": "^14.4.3",
     "aws-sdk": "^2.1340.0",
     "axios": "^1.2.6",
     "babel-jest": "^29.5.0",
@@ -102,8 +102,8 @@
     "url": "^0.11.0"
   },
   "jest": {
-    "moduleNameMapper":{
+    "moduleNameMapper": {
       "\\.(css|less|scss|sass)$": "identity-obj-proxy"
- }
+    }
   }
 }
