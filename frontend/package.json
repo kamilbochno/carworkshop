@@ -5,7 +5,7 @@
   "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://carworkshop.onrender.com",
+  "proxy": "https://carworkshop-api.onrender.com",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
