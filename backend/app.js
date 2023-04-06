@@ -1183,6 +1183,6 @@ app.post("/dashboard/admin/recentpurchases/edit", async (req, res) => {
   );
 });
 
-const PORT = process.env.API_PORT;
+const PORT = process.env.API_PORT || 8080;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
