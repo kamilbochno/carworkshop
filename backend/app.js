@@ -10,6 +10,7 @@ const multerS3 = require("multer-s3");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cookieparser = require("cookie-parser");
+const cors = require("cors");
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 const { response } = require("express"),
   client = new MongoClient(process.env.URL),
@@ -24,6 +25,7 @@ const { response } = require("express"),
   Services = client.db("WorkShopDB").collection("Services"),
   OrderHistory = client.db("WorkShopDB").collection("OrderHistory");
 
+app.use(cors());
 app.use(
   bodyParser.json({
     verify: function (req, res, buf) {
@@ -31,7 +33,7 @@ app.use(
       if (url.startsWith("/api/webhook")) {
         req.rawBody = buf.toString();
       }
-    }
+    },
   })
 );
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -44,11 +46,11 @@ const s3 = new S3Client({
   credentials: {
     accessKeyId: process.env.S3_ACCESS_KEY,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-    region: process.env.S3_BUCKET_REGION
+    region: process.env.S3_BUCKET_REGION,
   },
   sslEnabled: false,
   s3ForcePathStyle: true,
-  signatureVersion: "v4"
+  signatureVersion: "v4",
 });
 const DASHBOARD = "http://localhost:3000/dashboard/shop";
 
@@ -58,15 +60,15 @@ app.post("/dashboard/shop/savecart", async (request, response) => {
       httpOnly: false,
       sameSite: "None",
       secure: true,
-      maxAge: 1000 * 60 * 60 * 24
+      maxAge: 1000 * 60 * 60 * 24,
     });
     response.status(200).send({
-      cart: request.body
+      cart: request.body,
     });
   } catch (err) {
     console.log(err);
     response.status(500).send({
-      message: "Internal server error"
+      message: "Internal server error",
     });
   }
 });
@@ -87,21 +89,21 @@ app.post("/dashboard/shop/create-checkout-session", async (req, res) => {
           currency: "usd",
           product_data: {
             name: item.title,
-            images: [item.src]
+            images: [item.src],
           },
-          unit_amount: (Number(item.price) * 100).toFixed(0)
+          unit_amount: (Number(item.price) * 100).toFixed(0),
         },
-        quantity: item.quantity
+        quantity: item.quantity,
       };
     }),
     mode: "payment",
     payment_intent_data: {
       metadata: {
-        orderId
-      }
+        orderId,
+      },
     },
     success_url: `${DASHBOARD}?success=true`,
-    cancel_url: `${DASHBOARD}?canceled=true`
+    cancel_url: `${DASHBOARD}?canceled=true`,
   });
   res.status(200).send(session.url);
 });
@@ -111,7 +113,11 @@ app.post("/api/webhook/", (request, response) => {
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(request.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    event = stripe.webhooks.constructEvent(
+      request.rawBody,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
   } catch (err) {
     response.status(400).send(`Webhook Error: ${err.message}`);
     return;
@@ -125,8 +131,8 @@ app.post("/api/webhook/", (request, response) => {
         { _id: new ObjectId(successfullOrderId) },
         {
           $set: {
-            status: "Received payment"
-          }
+            status: "Received payment",
+          },
         }
       );
 
@@ -138,8 +144,8 @@ app.post("/api/webhook/", (request, response) => {
         { _id: new ObjectId(failedOrderId) },
         {
           $set: {
-            status: "Payment failed"
-          }
+            status: "Payment failed",
+          },
         }
       );
       break;
@@ -171,7 +177,7 @@ app.post("/addUser", async (req, res) => {
         FirstName: firstName,
         LastName: lastName,
         Password: encryptedPassword,
-        Admin: false
+        Admin: false,
       });
       return res.status(201).send("User created successfully");
     }
@@ -192,7 +198,7 @@ app.post("/loginUser", async (request, response) => {
         {
           userId: user._id,
           userEmail: user.Email,
-          admin: user.Admin
+          admin: user.Admin,
         },
         "accessToken",
         { expiresIn: "10m" }
@@ -202,7 +208,7 @@ app.post("/loginUser", async (request, response) => {
         {
           userId: user._id,
           userEmail: user.Email,
-          admin: user.Admin
+          admin: user.Admin,
         },
         "refreshToken",
         { expiresIn: "1d" }
@@ -212,14 +218,14 @@ app.post("/loginUser", async (request, response) => {
         httpOnly: true,
         sameSite: "None",
         secure: true,
-        maxAge: 1000 * 60 * 60
+        maxAge: 1000 * 60 * 60,
       });
       response.status(200).send({
         message: "Login Successful",
         email: user.Email,
         admin: user.Admin,
         token,
-        userId: user._id
+        userId: user._id,
       });
     } else {
       return response.status(400).send("Wrong email of password! Try again");
@@ -227,7 +233,7 @@ app.post("/loginUser", async (request, response) => {
   } catch (err) {
     console.log(err);
     response.status(500).send({
-      message: "Internal server error"
+      message: "Internal server error",
     });
   }
 });
@@ -248,16 +254,16 @@ app.post("/refresh", (req, res) => {
           {
             userId: userId,
             userEmail: userEmail,
-            admin: admin
+            admin: admin,
           },
           "accessToken",
           {
-            expiresIn: "10m"
+            expiresIn: "10m",
           }
         );
         const userData = {
           accessToken: accessToken,
-          admin: admin
+          admin: admin,
         };
         return res.status(200).send(userData);
       }
@@ -330,7 +336,7 @@ app.post("/dashboard/cars/addcar", async (req, res) => {
         Hp: hp,
         Mileage: mileage,
         VinNumber: vin,
-        Year: year
+        Year: year,
       },
       (err, car) => {
         console.log(carBrand);
@@ -350,7 +356,7 @@ app.post("/dashboard/cars/addcar", async (req, res) => {
             Hp: hp,
             Mileage: mileage,
             VinNumber: vin,
-            Year: year
+            Year: year,
           });
           return res.status(201).send("Car added successfully!");
         }
@@ -359,7 +365,8 @@ app.post("/dashboard/cars/addcar", async (req, res) => {
   }
 });
 app.post("/dashboard/cars/edit", async (req, res) => {
-  const { carBrand, carModel, engine, hp, mileage, vin, year, carId } = req.body;
+  const { carBrand, carModel, engine, hp, mileage, vin, year, carId } =
+    req.body;
   const token = req.cookies.jwt;
   if (token != null) {
     Cars.updateOne(
@@ -372,8 +379,8 @@ app.post("/dashboard/cars/edit", async (req, res) => {
           Hp: hp,
           Mileage: mileage,
           VinNumber: vin,
-          Year: year
-        }
+          Year: year,
+        },
       },
       function (err, result) {
         if (err) throw err;
@@ -430,7 +437,7 @@ app.post("/dashboard/profile/edit", async (req, res) => {
     phoneNumber,
     stateProvince,
     zipPostal,
-    street
+    street,
   } = req.body;
   const token = req.cookies.jwt;
   if (token != null) {
@@ -448,8 +455,8 @@ app.post("/dashboard/profile/edit", async (req, res) => {
           PhoneNumber: phoneNumber,
           StateProvince: stateProvince,
           ZipPostal: zipPostal,
-          Street: street
-        }
+          Street: street,
+        },
       },
       function (err, result) {
         if (err) throw err;
@@ -491,7 +498,17 @@ app.get("/dashboard/shop/carshopitems", async (req, res) => {
 });
 
 app.post("/dashboard/appointment/add", async (req, res) => {
-  const { carId, date, hours, phone, car, repairCategory, description, status, client } = req.body;
+  const {
+    carId,
+    date,
+    hours,
+    phone,
+    car,
+    repairCategory,
+    description,
+    status,
+    client,
+  } = req.body;
   const token = req.cookies.jwt;
   if (token != null) {
     const decoded = jwt.decode(token);
@@ -507,7 +524,7 @@ app.post("/dashboard/appointment/add", async (req, res) => {
         repairCategory: repairCategory,
         description: description,
         status: status,
-        client
+        client,
       },
       (err, appointment) => {
         if (err) {
@@ -535,8 +552,18 @@ app.get("/dashboard/admin/employees", async (req, res) => {
 });
 
 app.post("/dashboard/admin/employees/add", async (req, res) => {
-  const { name, surname, phone, role, salary, city, email, stateProvince, street, zipPostal } =
-    req.body;
+  const {
+    name,
+    surname,
+    phone,
+    role,
+    salary,
+    city,
+    email,
+    stateProvince,
+    street,
+    zipPostal,
+  } = req.body;
 
   Employees.insertOne(
     {
@@ -549,7 +576,7 @@ app.post("/dashboard/admin/employees/add", async (req, res) => {
       Email: email,
       StateProvince: stateProvince,
       Street: street,
-      ZipPostal: zipPostal
+      ZipPostal: zipPostal,
     },
     (err, appointment) => {
       if (err) {
@@ -566,15 +593,18 @@ app.post("/dashboard/admin/employees/add", async (req, res) => {
 app.post("/dashboard/admin/employees/delete", async (req, res) => {
   const { employeeId } = req.body;
 
-  Employees.deleteOne({ _id: new ObjectId(employeeId) }, function (err, employee) {
-    if (err) {
-      return res.status(500).send("Error");
-    }
+  Employees.deleteOne(
+    { _id: new ObjectId(employeeId) },
+    function (err, employee) {
+      if (err) {
+        return res.status(500).send("Error");
+      }
 
-    if (employee) {
-      return res.status(200).send("Employee deleted successfully");
+      if (employee) {
+        return res.status(200).send("Employee deleted successfully");
+      }
     }
-  });
+  );
 });
 
 app.post("/dashboard/admin/employees/edit", async (req, res) => {
@@ -589,7 +619,7 @@ app.post("/dashboard/admin/employees/edit", async (req, res) => {
     zipPostal,
     role,
     salary,
-    employeeId
+    employeeId,
   } = req.body;
   Employees.updateOne(
     { _id: new ObjectId(employeeId) },
@@ -604,8 +634,8 @@ app.post("/dashboard/admin/employees/edit", async (req, res) => {
         Email: email,
         StateProvince: stateProvince,
         Street: street,
-        ZipPostal: zipPostal
-      }
+        ZipPostal: zipPostal,
+      },
     },
     function (err, result) {
       if (err) throw err;
@@ -635,8 +665,8 @@ app.post("/dashboard/admin/appointments/edit", async (req, res) => {
     {
       $set: {
         description: description,
-        status: status
-      }
+        status: status,
+      },
     },
     function (err, result) {
       if (err) throw err;
@@ -650,15 +680,18 @@ app.post("/dashboard/admin/appointments/edit", async (req, res) => {
 app.post("/dashboard/admin/appointments/delete", async (req, res) => {
   const { appointmentId } = req.body;
 
-  Appointments.deleteOne({ _id: new ObjectId(appointmentId) }, function (err, appointment) {
-    if (err) {
-      return res.status(500).send("Error");
-    }
+  Appointments.deleteOne(
+    { _id: new ObjectId(appointmentId) },
+    function (err, appointment) {
+      if (err) {
+        return res.status(500).send("Error");
+      }
 
-    if (appointment) {
-      return res.status(201).send("Appointment deleted successfully");
+      if (appointment) {
+        return res.status(201).send("Appointment deleted successfully");
+      }
     }
-  });
+  );
 });
 
 app.get("/dashboard/services", async (req, res) => {
@@ -693,8 +726,17 @@ app.get("/dashboard/admin/services", async (req, res) => {
 });
 
 app.post("/dashboard/admin/services/add", async (req, res) => {
-  const { partsPrice, repairPrice, date, clientId, firstName, lastName, car, vin, parts } =
-    req.body;
+  const {
+    partsPrice,
+    repairPrice,
+    date,
+    clientId,
+    firstName,
+    lastName,
+    car,
+    vin,
+    parts,
+  } = req.body;
 
   Services.insertOne(
     {
@@ -706,7 +748,7 @@ app.post("/dashboard/admin/services/add", async (req, res) => {
       lastName: lastName,
       car: car,
       vin: vin,
-      parts: parts
+      parts: parts,
     },
     (err, service) => {
       if (err) {
@@ -721,7 +763,8 @@ app.post("/dashboard/admin/services/add", async (req, res) => {
 });
 
 app.post("/dashboard/admin/services/edit", async (req, res) => {
-  const { date, client, car, repairPrice, partsPrice, vin, serviceId } = req.body;
+  const { date, client, car, repairPrice, partsPrice, vin, serviceId } =
+    req.body;
   Services.updateOne(
     { _id: new ObjectId(serviceId) },
     {
@@ -731,8 +774,8 @@ app.post("/dashboard/admin/services/edit", async (req, res) => {
         car: car,
         repairPrice: repairPrice,
         partsPrice: partsPrice,
-        vin: vin
-      }
+        vin: vin,
+      },
     },
     function (err, result) {
       if (err) throw err;
@@ -792,91 +835,110 @@ const upload = (bucketName) =>
       },
       key: function (req, image, cb) {
         cb(null, `${Date.now()}-${image.originalname}`);
-      }
-    })
+      },
+    }),
   });
 
-app.post("/dashboard/admin/warehouse/carrepairshopitems/add", async (req, res) => {
-  const { formData } = req.body;
+app.post(
+  "/dashboard/admin/warehouse/carrepairshopitems/add",
+  async (req, res) => {
+    const { formData } = req.body;
 
-  console.log(req.body);
-  const uploadSingle = upload("carworkshop-product-image-upload").single("image");
+    console.log(req.body);
+    const uploadSingle = upload("carworkshop-product-image-upload").single(
+      "image"
+    );
 
-  uploadSingle(req, res, (err) => {
-    if (err) return res.status(400).json({ success: false, message: err.message });
+    uploadSingle(req, res, (err) => {
+      if (err)
+        return res.status(400).json({ success: false, message: err.message });
 
-    console.log(req.file.key);
-    if (res) {
-      CarRepairShopItems.insertOne(
-        {
-          title: req.body.title,
-          description: req.body.description,
-          price: req.body.price,
-          quantity: req.body.quantity,
-          src: req.file.location,
-          category: req.body.category,
-          key: req.file.key
-        },
-        (err, product) => {
-          if (err) {
-            return res.status(500).send("Error");
+      console.log(req.file.key);
+      if (res) {
+        CarRepairShopItems.insertOne(
+          {
+            title: req.body.title,
+            description: req.body.description,
+            price: req.body.price,
+            quantity: req.body.quantity,
+            src: req.file.location,
+            category: req.body.category,
+            key: req.file.key,
+          },
+          (err, product) => {
+            if (err) {
+              return res.status(500).send("Error");
+            }
+
+            if (product) {
+              return res
+                .status(201)
+                .send("Car repair shop item added successfully!");
+            }
           }
+        );
+      }
+    });
+  }
+);
 
-          if (product) {
-            return res.status(201).send("Car repair shop item added successfully!");
+app.post(
+  "/dashboard/admin/warehouse/carrepairshopitems/edit",
+  async (req, res) => {
+    const { formData } = req.body;
+
+    const uploadSingle = upload("carworkshop-product-image-upload").single(
+      "image"
+    );
+
+    uploadSingle(req, res, (err) => {
+      if (err)
+        return res.status(400).json({ success: false, message: err.message });
+      console.log(req.file);
+      const params = {
+        Bucket: "carworkshop-product-image-upload",
+        Key: req.body.key,
+      };
+      const command = new DeleteObjectCommand(params);
+      s3.send(command);
+
+      CarRepairShopItems.updateOne(
+        { _id: new ObjectId(req.body.itemId) },
+        {
+          $set: {
+            title: req.body.title,
+            description: req.body.description,
+            price: req.body.price,
+            quantity: req.body.quantity,
+            src: req.file.location,
+            category: req.body.category,
+            key: req.file.key,
+          },
+        },
+        function (err, result) {
+          if (err) throw err;
+          if (result) {
+            return res
+              .status(201)
+              .send("Car repair shop item edited successfully!");
           }
         }
       );
-    }
-  });
-});
-
-app.post("/dashboard/admin/warehouse/carrepairshopitems/edit", async (req, res) => {
-  const { formData } = req.body;
-
-  const uploadSingle = upload("carworkshop-product-image-upload").single("image");
-
-  uploadSingle(req, res, (err) => {
-    if (err) return res.status(400).json({ success: false, message: err.message });
-    console.log(req.file);
-    const params = {
-      Bucket: "carworkshop-product-image-upload",
-      Key: req.body.key
-    };
-    const command = new DeleteObjectCommand(params);
-    s3.send(command);
-
-    CarRepairShopItems.updateOne(
-      { _id: new ObjectId(req.body.itemId) },
-      {
-        $set: {
-          title: req.body.title,
-          description: req.body.description,
-          price: req.body.price,
-          quantity: req.body.quantity,
-          src: req.file.location,
-          category: req.body.category,
-          key: req.file.key
-        }
-      },
-      function (err, result) {
-        if (err) throw err;
-        if (result) {
-          return res.status(201).send("Car repair shop item edited successfully!");
-        }
-      }
-    );
-  });
-});
+    });
+  }
+);
 
 app.post("/dashboard/admin/warehouse/carshopitems/add", async (req, res) => {
   const { formData } = req.body;
 
   console.log(req.body);
-  const uploadSingle = upload("carworkshop-product-image-upload").single("image");
+  const uploadSingle = upload("carworkshop-product-image-upload").single(
+    "image"
+  );
 
   uploadSingle(req, res, (err) => {
-    if (err) return res.status(400).json({ success: false, message: err.message });
+    if (err)
+      return res.status(400).json({ success: false, message: err.message });
 
     console.log(req.file.key);
     if (res) {
@@ -888,7 +950,7 @@ app.post("/dashboard/admin/warehouse/carshopitems/add", async (req, res) => {
           quantity: req.body.quantity,
           src: req.file.location,
           category: req.body.category,
-          key: req.file.key
+          key: req.file.key,
         },
         (err, product) => {
           if (err) {
@@ -907,14 +969,17 @@ app.post("/dashboard/admin/warehouse/carshopitems/add", async (req, res) => {
 app.post("/dashboard/admin/warehouse/carshopitems/edit", async (req, res) => {
   const { formData } = req.body;
 
-  const uploadSingle = upload("carworkshop-product-image-upload").single("image");
+  const uploadSingle = upload("carworkshop-product-image-upload").single(
+    "image"
+  );
 
   uploadSingle(req, res, (err) => {
-    if (err) return res.status(400).json({ success: false, message: err.message });
+    if (err)
+      return res.status(400).json({ success: false, message: err.message });
     console.log(req.file);
     const params = {
       Bucket: "carworkshop-product-image-upload",
-      Key: req.body.key
+      Key: req.body.key,
     };
     const command = new DeleteObjectCommand(params);
     s3.send(command);
@@ -929,8 +994,8 @@ app.post("/dashboard/admin/warehouse/carshopitems/edit", async (req, res) => {
           quantity: req.body.quantity,
           src: req.file.location,
           category: req.body.category,
-          key: req.file.key
-        }
+          key: req.file.key,
+        },
       },
       function (err, result) {
         if (err) throw err;
@@ -942,45 +1007,58 @@ app.post("/dashboard/admin/warehouse/carshopitems/edit", async (req, res) => {
   });
 });
 
-app.post("/dashboard/admin/warehouse/carrepairshopitems/delete", async (req, res) => {
-  const { itemId, key } = req.body;
+app.post(
+  "/dashboard/admin/warehouse/carrepairshopitems/delete",
+  async (req, res) => {
+    const { itemId, key } = req.body;
 
-  if (key) {
-    const params = {
-      Bucket: "carworkshop-product-image-upload",
-      Key: key
-    };
-    const command = new DeleteObjectCommand(params);
-    await s3.send(command);
+    if (key) {
+      const params = {
+        Bucket: "carworkshop-product-image-upload",
+        Key: key,
+      };
+      const command = new DeleteObjectCommand(params);
+      await s3.send(command);
 
-    CarRepairShopItems.deleteOne({ _id: new ObjectId(itemId) }, function (err, item) {
-      if (err) {
-        return res.status(500).send("Error");
-      }
+      CarRepairShopItems.deleteOne(
+        { _id: new ObjectId(itemId) },
+        function (err, item) {
+          if (err) {
+            return res.status(500).send("Error");
+          }
 
-      if (item) {
-        return res.status(201).send("Car repair shop item deleted successfully");
-      }
-    });
-  } else {
-    CarRepairShopItems.deleteOne({ _id: new ObjectId(itemId) }, function (err, item) {
-      if (err) {
-        return res.status(500).send("Error");
-      }
+          if (item) {
+            return res
+              .status(201)
+              .send("Car repair shop item deleted successfully");
+          }
+        }
+      );
+    } else {
+      CarRepairShopItems.deleteOne(
+        { _id: new ObjectId(itemId) },
+        function (err, item) {
+          if (err) {
+            return res.status(500).send("Error");
+          }
 
-      if (item) {
-        return res.status(201).send("Car repair shop item deleted successfully");
-      }
-    });
+          if (item) {
+            return res
+              .status(201)
+              .send("Car repair shop item deleted successfully");
+          }
+        }
+      );
+    }
   }
-});
+);
 
 app.post("/dashboard/admin/warehouse/carshopitems/delete", async (req, res) => {
   const { itemId, key } = req.body;
   if (key) {
     const params = {
       Bucket: "carworkshop-product-image-upload",
-      Key: key
+      Key: key,
     };
     const command = new DeleteObjectCommand(params);
     await s3.send(command);
@@ -1024,7 +1102,7 @@ app.post("/dashboard/shop/createorder", async (req, res) => {
         status: "Pending",
         created: day + "." + month + "." + year,
         totalPrice: totalPrice,
-        items: { items }
+        items: { items },
       },
       (err, order) => {
         if (err) {
@@ -1089,8 +1167,8 @@ app.post("/dashboard/admin/recentpurchases/edit", async (req, res) => {
     { _id: new ObjectId(orderId) },
     {
       $set: {
-        status: status
-      }
+        status: status,
+      },
     },
     function (err, result) {
       if (err) throw err;
