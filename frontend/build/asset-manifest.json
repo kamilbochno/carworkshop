@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.ce9f4b63.css",
+    "main.js": "/static/js/main.8527a454.js",
+    "static/media/production ID_4489804.mp4": "/static/media/production ID_4489804.4e39569f641f709e4a58.mp4",
+    "static/media/background5.jpg": "/static/media/background5.8aba0870352ef5c6a77e.jpg",
+    "static/media/team1.jpg": "/static/media/team1.6ac85de7298319b1f8d5.jpg",
+    "static/media/mdi_car-wrench.svg": "/static/media/mdi_car-wrench.c1248ab7c0e781b15ecddcc900362f38.svg",
+    "index.html": "/index.html",
+    "main.ce9f4b63.css.map": "/static/css/main.ce9f4b63.css.map",
+    "main.8527a454.js.map": "/static/js/main.8527a454.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ce9f4b63.css",
+    "static/js/main.8527a454.js"
+  ]
+}
