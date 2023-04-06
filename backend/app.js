@@ -25,7 +25,11 @@ const { response } = require("express"),
   Services = client.db("WorkShopDB").collection("Services"),
   OrderHistory = client.db("WorkShopDB").collection("OrderHistory");
 
-app.use(cors());
+const corsOptions = {
+  origin: "https://carworkshop-front.vercel.app/",
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 app.use(
   bodyParser.json({
     verify: function (req, res, buf) {
