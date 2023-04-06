@@ -25,11 +25,7 @@ const { response } = require("express"),
   Services = client.db("WorkShopDB").collection("Services"),
   OrderHistory = client.db("WorkShopDB").collection("OrderHistory");
 
-const corsOptions = {
-  origin: "https://carworkshop-front.vercel.app/",
-  optionsSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(
   bodyParser.json({
     verify: function (req, res, buf) {
@@ -56,7 +52,7 @@ const s3 = new S3Client({
   s3ForcePathStyle: true,
   signatureVersion: "v4",
 });
-const DASHBOARD = "http://localhost:3000/dashboard/shop";
+const DASHBOARD = "/dashboard/shop";
 
 app.post("/dashboard/shop/savecart", async (request, response) => {
   try {
