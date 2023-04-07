@@ -26,7 +26,6 @@ const { response } = require("express"),
   Services = client.db("WorkShopDB").collection("Services"),
   OrderHistory = client.db("WorkShopDB").collection("OrderHistory");
 
-app.require(https);
 app.use(cors());
 app.use(
   bodyParser.json({
