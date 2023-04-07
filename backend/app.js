@@ -10,6 +10,7 @@ const multerS3 = require("multer-s3");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cookieparser = require("cookie-parser");
+const https = require("https");
 const cors = require("cors");
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 const { response } = require("express"),
@@ -25,6 +26,7 @@ const { response } = require("express"),
   Services = client.db("WorkShopDB").collection("Services"),
   OrderHistory = client.db("WorkShopDB").collection("OrderHistory");
 
+app.use(https());
 app.use(cors());
 app.use(
   bodyParser.json({
