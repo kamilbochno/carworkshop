@@ -3,18 +3,18 @@
 # Build react client
 FROM node:18.15.0-alpine
 
-#Working directory be app
-WORKDIR /frontend
+# Create App Directory
+RUN mkdir -p /backend
+WORKDIR /backend
 
+# Install Dependencies
 COPY package*.json ./
-
-### Installing dependencies
 
 RUN npm install --silent
 
-# copy local files to app folder
+# Copy app source code
 COPY . .
 
-EXPOSE 3000
+EXPOSE 8080
 
 CMD ["npm", "start"]

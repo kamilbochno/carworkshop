@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: carworkshop-server
+    container_name: carworkshop-node-server
+    command: node app.js
+    ports:
+      - "8080:8080"
+    
+    env_file: ./backend/.env
+    environment:
+      - NODE_ENV=development
+    networks:
+      - app-network
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: carworkshop-client
+    container_name: carworkshop-react-client
+    command: npm start
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+networks:
+    app-network:
+        driver: bridge
+
+volumes:
+    data-volume:
+    node_modules:
+    web-root:
+      driver: local
