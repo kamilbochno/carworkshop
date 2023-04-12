@@ -23,7 +23,7 @@ Client login credentials <br>
 * [Screenshots](#screenshots)
 * [Setup](#setup)
 * [Project Status](#project-status)
-* [Room for Improvement](#room-for-improvement)
+* [Room for Improvement](#improvements-to-be-done)
 * [Contact](#contact)
 <!-- * [License](#license) -->
 
@@ -178,21 +178,49 @@ Admin dashboard
 ... and many more!
 
 ## Setup
+
+Localhost version:
 1. Create New Folder <br>
 
-2. Type <br>
-> 'git clone ' into the console/git cli <br>
-Then <br>
-> 'cd ' <br>
-3. Create Virtual Environment by typing <br>
+2. Clone project
+> Type <br>
+> 'git clone https://github.com/kamilbochno/carworkshop.git into the console/git cli <br>
 
-4. Install all required dependencies located in requirements.txt using <br>
+3. Launch development server
+> Type <br>
+> 'cd backend' <br>
+> Create '.env' file (required variables are located in env-sample) <br>
+Then <br>
+> type 'node app.js' in console and start the development node server <br>
+
+4. Launch development frontend
+> Launch new terminal <br>
+Then type <br>
+> 'cd frontend' <br>
+Then <br>
+> type 'npm start' in console and start the development frontend <br>
+
+Docker version:
+1. Create New Folder <br>
+
+2. Clone project
+> Type <br>
+> 'git clone https://github.com/kamilbochno/carworkshop.git into the console/git cli <br>
+
+3. Run and build dockerized development app
+> Type <br>
+> 'docker-compose up --build' <br>
+
 
 ## Project Status
 Project is: :fire: COMPLETED :fire:
 
 ## Improvements to be done
 - Mobile version of the application
+- Improvements on source code
+- Investigate for unexpected bugs and fix them
+- Improve app loading speed
+- Improve api speed
 
 ## Contact
 Created by Kamil Bochno - feel free to contact me!
