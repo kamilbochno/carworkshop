@@ -62,7 +62,7 @@ In admin/employee dashboard admin can easily search for services history, employ
 ## Features
 General
 - Sign up an account
-- Sign in to account
+- Sign in to account (with user authentication)
 - Sign in and sign up form validation (on frontend, and on backend)
 - All forms validation on client side
 
@@ -78,7 +78,7 @@ Client dashboard cars
 - My cars table (car details, edit and delete)
 
 Client dashboard appointment
-- Make an appointment (form to create apn appointment)
+- Make an appointment (form to create appointment)
 
 Client dashboard shop
 - Shop navbar with currency and items cart
@@ -88,6 +88,7 @@ Client dashboard shop
 - Add item to cart (with validation)
 - Shopping cart with items (calculate price of single items and subtotal, remove items from cart)
 - Shopping cart items checkout (connect with stripe payment service api for payment processing)
+- Shopping cart items saved in cookies
 
 Client dashboard profile
 - Client profile details
@@ -120,6 +121,59 @@ Admin dashboard employees
 - Employees table (employee details, edit and delete)
 
 ## Screenshots
+
+Landing page
+
+<img src="preview_images/Home/Reviews_section.png?raw=true" alt="Reviews_section"/>
+<img src="preview_images/Home/Contact_form.png?raw=true" alt="Contact_form"/>
+<img src="preview_images/Home/Home_footer.png?raw=true" alt="Home_footer"/>
+<img src="preview_images/Home/Home_signed_up.png?raw=true" alt="Home_signed_up"/>
+<img src="preview_images/Home/Home_logout_toast.png?raw=true" alt="Home_logout_toast"/>
+<img src="preview_images/Home/Login_page_validation1.png?raw=true" alt="Login_page_validation1"/>
+<img src="preview_images/Home/Login_page_validation2.png?raw=true" alt="Login_page_validation2"/>
+<img src="preview_images/Home/Login_page_validation3.png?raw=true" alt="Login_page_validation3"/>
+<img src="preview_images/Home/Signup.png?raw=true" alt="Signup"/>
+<img src="preview_images/Home/Signup_validation1.png?raw=true" alt="Signup_validation1"/>
+<img src="preview_images/Home/Signup_validation2.png?raw=true" alt="Signup_validation2"/>
+
+Client dashboard
+<img src="preview_images/Dashboard/Client_dashboard.png?raw=true" alt="Client_dashboard"/>
+<img src="preview_images/Dashboard/Client_dashboard1.png?raw=true" alt="Client_dashboard1"/>
+<img src="preview_images/Dashboard/Client_dashboard2.png?raw=true" alt="Client_dashboard2"/>
+<img src="preview_images/Dashboard/Client_appointment.png?raw=true" alt="Client_appointment"/>
+<img src="preview_images/Dashboard/Client_appointment_validation.png?raw=true" alt="Client_appointment_validation"/>
+<img src="preview_images/Dashboard/Client_cars.png?raw=true" alt="Client_cars"/>
+<img src="preview_images/Dashboard/Client_cars_add.png?raw=true" alt="Client_cars_add"/>
+<img src="preview_images/Dashboard/Client_cars_add_validation.png?raw=true" alt="Client_cars_add_validation"/>
+<img src="preview_images/Dashboard/Client_cars_add_validation1.png?raw=true" alt="Client_cars_add_validation2"/>
+<img src="preview_images/Dashboard/Client_cars_delete.png?raw=true" alt="Client_cars_delete"/>
+<img src="preview_images/Dashboard/Client_cars_edit.png?raw=true" alt="Client_cars_edit"/>
+<img src="preview_images/Dashboard/Client_shop.png?raw=true" alt="Client_shop"/>
+<img src="preview_images/Dashboard/Client_shop1.png?raw=true" alt="Client_shop1"/>
+<img src="preview_images/Dashboard/Client_shop2.png?raw=true" alt="Client_shop2"/>
+<img src="preview_images/Dashboard/Client_shop3.png?raw=true" alt="Client_shop3"/>
+<img src="preview_images/Dashboard/Client_shop4.png?raw=true" alt="Client_shop4"/>
+<img src="preview_images/Dashboard/Client_shop5.png?raw=true" alt="Client_shop5"/>
+<img src="preview_images/Dashboard/Client_shop_cart.png?raw=true" alt="Client_shop_cart"/>
+<img src="preview_images/Dashboard/Client_shop_cart1.png?raw=true" alt="Client_shop_cart1"/>
+<img src="preview_images/Dashboard/Client_shop_checkout.png?raw=true" alt="Client_shop_checkout"/>
+<img src="preview_images/Dashboard/Client_shop_checkout2.png?raw=true" alt="Client_shop_checkout2"/>
+<img src="preview_images/Dashboard/Client_profile.png?raw=true" alt="Client_profile"/>
+<img src="preview_images/Dashboard/Client_profile2.png?raw=true" alt="Client_profile2"/>
+
+Admin dashboard
+<img src="preview_images/Dashboard/Dashboard_loading.png?raw=true" alt="Dashboard_loading"/>
+<img src="preview_images/Dashboard/Admin_dashboard.png?raw=true" alt="Admin_dashboard"/>
+<img src="preview_images/Dashboard/Admin_dashboard2.png?raw=true" alt="Admin_dashboard2"/>
+<img src="preview_images/Dashboard/Admin_dashboard3.png?raw=true" alt="Admin_dashboard3"/>
+<img src="preview_images/Dashboard/Admin_dashboard_employees.png?raw=true" alt="Admin_dashboard_employees"/>
+<img src="preview_images/Dashboard/Admin_dashboard_employees1.png?raw=true" alt="Admin_dashboard_employees1"/>
+<img src="preview_images/Dashboard/Admin_dashboard_items.png?raw=true" alt="Admin_dashboard_items"/>
+<img src="preview_images/Dashboard/Admin_dashboard_items2.png?raw=true" alt="Admin_dashboard_items2"/>
+<img src="preview_images/Dashboard/Admin_dashboard_purchases.png?raw=true" alt="Admin_dashboard_purchases"/>
+<img src="preview_images/Dashboard/Admin_dashboard_services.png?raw=true" alt="Admin_dashboard_services"/>
+<img src="preview_images/Dashboard/Admin_dashboard_services2.png?raw=true" alt="Admin_dashboard_services2"/>
+<img src="preview_images/Dashboard/Admin_dashboard_services3.png?raw=true" alt="Admin_dashboard_services3"/>
 
 ... and many more!
 
