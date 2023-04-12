@@ -35,8 +35,12 @@ an information section where a potential customer can learn more about the works
 and a footer at the bottom of the page with the most important information about the workshop.
 In addition, when being at the bottom of the page, you can use the button to return to the top of the page.
 
-The dashboard is different for the client and different for the admin. In client dashboard user can 
+The dashboard is different for the client and different for the admin. In client dashboard user can easily search for service history, cars overview
+and appointments from the car repair shop section, and for order history and new offers from car shop section. From dashboard user can quickly navigate
+to manage cars, appointments and shop subpages. On the navbar in the top of the dashboard user can navigate to my cars, appointment, shop, user profile
+and settings subpages. User can additionally return to the homepage and logout from dashboard.
 
+In admin/employee dashboard admin can easily search for services history, employees overview, appointments and recent purchases tables. From dashboard admin can view details or edit/delete table items. On the navbar in the top of the dashboard admin can navigate to warehouse and employees subpages. Admin can additionally return to the homepage and logout from dashboard.
 
 
 ## Technologies Used:
@@ -56,8 +60,64 @@ The dashboard is different for the client and different for the admin. In client
 - <img src="https://symbols.getvecta.com/stencil_9/32_aws-elastic-beanstalk.3cbb564d52.svg" title="AWS" alt="AWS" width="20" height="20" align='center'/> AWS S3 (product images)&nbsp;
 
 ## Features
-List the ready features here:
+General
+- Sign up an account
+- Sign in to account
+- Sign in and sign up form validation (on frontend, and on backend)
+- All forms validation on client side
 
+Client dashboard
+- Service history table (service details)
+- Cars overview table (manage button that navigates to my cars subpage)
+- Appointments table (add button that navigates to appointments subpage)
+- Order history table (order details)
+- New offers carousel with shop now button that navigates to shop subpage)
+
+Client dashboard cars
+- Add car
+- My cars table (car details, edit and delete)
+
+Client dashboard appointment
+- Make an appointment (form to create apn appointment)
+
+Client dashboard shop
+- Shop navbar with currency and items cart
+- Products category filter
+- Products per page selection
+- Search items filter
+- Add item to cart (with validation)
+- Shopping cart with items (calculate price of single items and subtotal, remove items from cart)
+- Shopping cart items checkout (connect with stripe payment service api for payment processing)
+
+Client dashboard profile
+- Client profile details
+- Client profile editable settings
+
+Admin dashboard
+- Services history table (add service, service details, delete service)
+- Employees overview table (manage button that navigates to employees subpage)
+- Appointments table (appointment details, edit and delete)
+- Recent purchases table (purchase details and edit)
+
+Admin dashboard warehouse
+
+Car repair shop items section
+- Products category filter
+- Products per page selection
+- Add new item
+- Items list (item details, edit and delete)
+- Items list pagination
+
+Car shop items section
+- Products category filter
+- Products per page selection
+- Add new item
+- Items list (item details, edit and delete)
+- Items list pagination
+
+Admin dashboard employees
+- Add new employee
+- Employees table (employee details, edit and delete)
 
 ## Screenshots
 
